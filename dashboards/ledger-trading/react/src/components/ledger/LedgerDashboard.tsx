@@ -1,3 +1,4 @@
+'use client';
 import { LayoutGroup, MotionConfig, motion } from 'framer-motion';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ChartCard, type ChartHandle } from './ChartCard';
@@ -16,13 +17,22 @@ export interface LedgerDashboardProps {
 }
 
 /** Ledger: a trading desk dashboard. Free, MIT, by qodesign.dev. Prices are simulated. */
-export function LedgerDashboard({ autoplayDemo = true, store: external }: LedgerDashboardProps) {
+export function LedgerDashboard(props: LedgerDashboardProps) {
+  // Prices, trades and the clock are live and random, so the desk renders after mount.
+  // This keeps the server HTML and the first client render identical (no hydration warning in Next.js).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="ledger" style={{ minHeight: '100vh' }} aria-busy="true" />;
+  return <Desk {...props} />;
+}
+
+function Desk({ autoplayDemo = true, store: external }: LedgerDashboardProps) {
   const [store] = useState(() => external ?? new LedgerStore(typeof window !== 'undefined' && window.innerWidth < 900 ? 6 : 9));
-  useSyncExternalStore(store.subscribe, store.getVersion);
+  useSyncExternalStore(store.subscribe, store.getVersion, store.getVersion);
   const [tab, setTab] = useState('Trade');
   const [clock, setClock] = useState('--:--:--');
   const [toast, setToast] = useState<string | null>(null);
-  const toastT = useRef<ReturnType<typeof setTimeout>>();
+  const toastT = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const chart = useRef<ChartHandle>(null);
   const ticket = useRef<TicketHandle | null>(null);
   const pf = useRef<PortfolioHandle | null>(null);

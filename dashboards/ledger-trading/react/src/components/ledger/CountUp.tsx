@@ -1,3 +1,4 @@
+'use client';
 import { animate, useReducedMotion } from 'framer-motion';
 import { createElement, useEffect, useRef } from 'react';
 import { fmt } from './store';

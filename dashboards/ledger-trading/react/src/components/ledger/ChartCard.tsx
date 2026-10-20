@@ -1,3 +1,4 @@
+'use client';
 import { motion, useReducedMotion } from 'framer-motion';
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { CountUp } from './CountUp';

@@ -1,3 +1,4 @@
+'use client';
 import { LayoutGroup, MotionConfig, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { type RangeKey } from './data';
@@ -30,6 +31,11 @@ export interface OrbitDashboardProps {
 
 /** Orbit: an infra observability dashboard. Free, MIT, by qodesign.dev. */
 export function OrbitDashboard(props: OrbitDashboardProps) {
+  // The demo data uses live clock times and random values, so it renders after mount.
+  // This keeps the server HTML and the first client render identical (no hydration warning in Next.js).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="orbit" style={{ minHeight: '100vh' }} aria-busy="true" />;
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider><Dashboard {...props} /></TooltipProvider>

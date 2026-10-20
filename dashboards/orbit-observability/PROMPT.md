@@ -2,6 +2,8 @@
 
 Paste one of these into your coding agent (Cursor, Claude Code, Windsurf, v0, Lovable). Open this folder in the agent first so it can read the files.
 
+Next.js App Router ready ('use client' included), React 18/19, Tailwind v3/v4. In a Next.js app, put the files under `components/` and import them from any page.
+
 ---
 
 ## Prompt 1: add it to my project

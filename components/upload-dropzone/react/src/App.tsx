@@ -1,3 +1,4 @@
+'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { UploadDropzone, UploadDropzoneHandle, uploadBurst } from './components/UploadDropzone';
 import './demo.css';

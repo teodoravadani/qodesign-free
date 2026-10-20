@@ -20,6 +20,14 @@ The demo plays by itself: it scrubs the chart, drags the order slider, highlight
   - `ledger.css`: styles, scoped under `.ledger`, tokens at the top.
 - `PROMPT.md`: prompts for AI coding agents.
 
+## Next.js
+Next.js App Router ready ('use client' included), React 18/19, Tailwind v3/v4.
+
+Copy `react/src/components` into your app and import it from any page, server pages included.
+Checked on Oct 20, 2026 in a clean Next.js 15 + React 19 + Tailwind v4 app (strict TypeScript, `next build`, static prerender, no hydration warnings) and in the Vite + React 18 + Tailwind v3 project in `react/`.
+
+- The demo data is live and random, so the dashboard draws itself right after mount. The server HTML is an empty panel with the same background, which keeps hydration clean.
+
 ## Install
 
 shadcn CLI (copies the React files into your project):

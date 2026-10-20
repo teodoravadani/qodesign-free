@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PricingSwitch, PricingSwitchHandle, Plan } from './components/PricingSwitch';
 import './demo.css';

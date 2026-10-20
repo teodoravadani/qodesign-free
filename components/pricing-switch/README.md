@@ -15,6 +15,12 @@ Live demo: open [html/pricing-switch.html](html/pricing-switch.html) in a browse
   - `react/src/App.tsx`: the demo page and the scripted cursor.
 - `PROMPT.md`: prompts for AI coding agents.
 
+## Next.js
+Next.js App Router ready ('use client' included), React 18/19, Tailwind v3/v4.
+
+Copy `react/src/components` into your app and import it from any page, server pages included.
+Checked on Oct 20, 2026 in a clean Next.js 15 + React 19 + Tailwind v4 app (strict TypeScript, `next build`, static prerender, no hydration warnings) and in the Vite + React 18 + Tailwind v3 project in `react/`.
+
 ## Run the React demo
 
 ```bash

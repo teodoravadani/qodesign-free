@@ -1,3 +1,4 @@
+'use client';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { KPIS, R, RANGES, type KpiKey, type RangeKey } from './data';

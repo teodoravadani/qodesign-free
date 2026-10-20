@@ -1,3 +1,4 @@
+'use client';
 import { motion, useReducedMotion } from 'framer-motion';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { C, EDGES, NODES, R, fmt, type Health, type SvcNode } from './data';

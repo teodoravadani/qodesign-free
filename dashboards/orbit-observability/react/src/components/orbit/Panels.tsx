@@ -1,3 +1,4 @@
+'use client';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { C, DEPLOYS, NEXT_DEPLOYS, R, REGIONS, RESOURCES, UPTIME, rand, type Deploy } from './data';

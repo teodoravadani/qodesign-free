@@ -1,3 +1,4 @@
+'use client';
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { fmt, mkEvent, seedEvents, timeStr, type EventRow, type Level } from './data';

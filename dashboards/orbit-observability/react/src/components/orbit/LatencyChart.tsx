@@ -1,3 +1,4 @@
+'use client';
 import { animate, motion, useReducedMotion } from 'framer-motion';
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { C, R, RANGES, genLatency, type Latency, type RangeKey } from './data';

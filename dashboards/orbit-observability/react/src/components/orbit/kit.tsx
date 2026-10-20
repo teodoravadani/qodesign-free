@@ -1,3 +1,4 @@
+'use client';
 import { animate, useReducedMotion } from 'framer-motion';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { C, fmt, type ColorKey } from './data';

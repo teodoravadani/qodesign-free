@@ -1,8 +1,14 @@
 # qodesign-free
 
-Free animated UI components and two full dashboards. Every item comes as a single HTML file you can open and copy, and as a React component (React 18, TypeScript, Tailwind CSS 3, Framer Motion). MIT licensed.
+Free animated React components and two full dashboards for Next.js, Vite and Lovable apps. Each one installs with the shadcn CLI and is written in TypeScript with Tailwind CSS and Framer Motion. MIT licensed.
 
 **[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
+
+```bash
+npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stack.json
+```
+
+That copies the source into `components/<name>/` and installs `framer-motion`. The code is yours to edit from there.
 
 | | |
 |---|---|
@@ -11,8 +17,6 @@ Free animated UI components and two full dashboards. Every item comes as a singl
 | [![Upload Dropzone](components/upload-dropzone/preview.gif)](components/upload-dropzone) <br> **[Upload Dropzone](components/upload-dropzone)**: drag and drop with progress rings. [Demo](https://teodoravadani.github.io/qodesign-free/upload-dropzone/) | [![Day / Night Toggle](components/day-night-toggle/preview.gif)](components/day-night-toggle) <br> **[Day / Night Toggle](components/day-night-toggle)**: the sun rolls into a moon. [Demo](https://teodoravadani.github.io/qodesign-free/day-night-toggle/) |
 
 ## Install
-
-Each item installs with the shadcn CLI (it copies the source into `components/<name>/` and adds `framer-motion`):
 
 | Item | shadcn CLI | Single HTML file |
 |---|---|---|
@@ -23,16 +27,20 @@ Each item installs with the shadcn CLI (it copies the source into `components/<n
 | Upload Dropzone | `npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/upload-dropzone.json` | [upload-dropzone.html](components/upload-dropzone/html/upload-dropzone.html) |
 | Day / Night Toggle | `npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/day-night-toggle.json` | [day-night-toggle.html](components/day-night-toggle/html/day-night-toggle.html) |
 
-No shadcn setup? Copy the folder under `react/src/components/` into your project and `npm i framer-motion`. Or open the HTML file: no build step, no dependencies.
+No shadcn setup? Copy the folder under `react/src/components/` into your project and run `npm i framer-motion`.
 
-Every folder has its own README (props, data, accessibility notes) and a `PROMPT.md` with ready-made prompts for Cursor, Claude Code, v0 or Lovable: add it to my project, wire it to my data, restyle it, port it to Vue or Svelte.
+**Next.js App Router:** every component file already starts with `'use client'`, so it works in a server page as is.
+
+**With an AI agent:** every folder has a `PROMPT.md` with prompts for Cursor, Claude Code, v0 or Lovable: add it to my project, wire it to my data, restyle it, port it to Vue or Svelte.
+
+**No React?** Every item also comes as one HTML file (CSS and JS inline), linked in the table above.
 
 ## What you get in each folder
 
 ```
 <item>/
-  html/<item>.html     one file: HTML, CSS, plain JS
-  react/               Vite + React 18 + TS + Tailwind 3 + Framer Motion
+  react/               the component, plus a Vite + React + TS + Tailwind + Framer Motion demo app
+  html/<item>.html     the same thing as one HTML file
   README.md            usage, props, accessibility
   PROMPT.md            prompts for AI coding agents
   preview.gif          the loop you see above
@@ -49,13 +57,14 @@ npm run dev
 
 ## Notes
 
-- Every demo plays by itself until you touch it, then gets out of your way. Add `?demo=0` to turn that off.
+- Every demo plays by itself until you touch it. Add `?demo=0` to turn that off.
 - Everything respects Reduce Motion and has visible focus states and 44 px touch targets on phones.
+- The page keeps scrolling when your cursor or finger is over a component.
 - Data in the dashboards is simulated. Each README says which file to swap for your API.
 
 ## More components (paid, $3 each or $29 for all)
 
-The same style, more ambitious. Each one ships the same way (HTML, React, prompts).
+Same style, bigger pieces. Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
 
 - [Particle Morph](https://qodesign.dev/components/particle-morph?utm_source=github&utm_medium=readme&utm_campaign=free_repo): 9,000 particles that spring between a sphere, a word and a torus knot.
 - [Pull-Cord Login](https://qodesign.dev/components/pull-cord-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): pull the cord, the lamp turns on, the login form appears.

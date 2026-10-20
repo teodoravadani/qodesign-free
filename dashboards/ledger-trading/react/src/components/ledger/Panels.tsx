@@ -1,3 +1,4 @@
+'use client';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CountUp } from './CountUp';
