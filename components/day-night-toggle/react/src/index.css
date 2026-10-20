@@ -3,4 +3,4 @@
 @tailwind utilities;
 
 html, body, #root { margin: 0; height: 100%; }
-body { font-family: 'Space Grotesk', system-ui, sans-serif; overflow: hidden; }
+body { font-family: 'Space Grotesk', system-ui, sans-serif; }

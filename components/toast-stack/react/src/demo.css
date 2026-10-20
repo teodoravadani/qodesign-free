@@ -7,7 +7,6 @@
 }
 *{box-sizing:border-box}
 html,body,#root{margin:0;height:100%;background:var(--ink);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-body{overflow:hidden}
 #root{display:grid;place-items:center}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--volt);outline-offset:3px}

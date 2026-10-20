@@ -180,7 +180,7 @@
 .ledger .tsearch:focus-within{border-color:color-mix(in srgb,var(--up) 55%,var(--line));box-shadow:0 0 0 3px rgba(198,255,61,.22)}
 /* hig-disable-next-line css/outline-none -- the focus ring is drawn on the wrapper with :focus-within (inputs) or on the node core with :focus-visible (map nodes) */
 .ledger .tsearch input{border:0;background:none;outline:none;flex:1;min-width:0;font-size:13px;color:var(--text)}
-.ledger .tbl-wrap{overflow:auto;max-height:360px;border:1px solid var(--line-soft);border-radius:var(--r-md);overscroll-behavior:contain}
+.ledger .tbl-wrap{overflow:auto;max-height:360px;border:1px solid var(--line-soft);border-radius:var(--r-md);overscroll-behavior-x:contain}
 .ledger table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:640px}
 .ledger thead th{position:sticky;top:0;z-index:2;background:var(--panel-2);text-align: start;font-weight:600;color:var(--muted);font-size:12px;padding:0;border-bottom:1px solid var(--line)}
 .ledger thead th button{display:flex;align-items:center;gap:6px;width:100%;height:36px;padding:0 12px;border:0;background:none;color:inherit;font-weight:600}
