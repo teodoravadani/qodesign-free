@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day / Night Toggle · qodesign</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22%3E%3Ccircle cx=%2214%22 cy=%2214%22 r=%2210%22 fill=%22%23FFD23F%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;height:100vh;display:grid;place-items:center;font-family:'Space Grotesk',system-ui,sans-serif;
+       background:#EAF4FF;transition:background .8s ease;overflow:hidden}
+  body.night{background:#070B1A}
+  .wrap{display:grid;justify-items:center;gap:40px}
+  .label{font-size:48px;font-weight:700;letter-spacing:-.5px;color:#14213D;transition:color .8s}
+  body.night .label{color:#E8ECFF}
+  .toggle:focus-visible{outline:10px solid #8B6CFF;outline-offset:8px}
+  .credit{position:fixed;left:0;right:0;bottom:16px;text-align:center;font-size:14px;color:#4A5A78;transition:color .8s}
+  body.night .credit{color:#8A8FA3}
+  .credit a{color:inherit;text-underline-offset:2px}
+  @media (max-width:700px){.toggle{zoom:.55}.label{font-size:30px}.wrap{gap:28px}}
+  @media (max-width:360px){.toggle{zoom:.48}}
+  @media (prefers-reduced-motion:reduce){
+    body,.label,.toggle,.knob,.crater,.star,.cloud{transition-duration:.2s!important;transition-delay:0s!important;transition-timing-function:ease!important}
+    .toggle.night .knob{transform:translateX(384px)!important}
+    .star{transform:none!important;opacity:0;transition-property:opacity!important}
+    .toggle.night .star{opacity:1}
+    .toggle.night .cloud{transform:none!important;opacity:0!important}
+  }
+/* <reel> */
+.toggle {
+  position: relative; width: 640px; height: 256px;
+  border-radius: 999px; cursor: pointer; overflow: hidden;
+  background: linear-gradient(#5DB8FF, #A8DBFF);
+  box-shadow: inset 0 10px 22px rgba(0,0,0,.25);
+  transition: background .8s ease;
+}
+.toggle.night { background: linear-gradient(#0B1033, #27306B); }
+.knob {
+  position: absolute; top: 22px; left: 22px;
+  width: 212px; height: 212px; border-radius: 50%;
+  background: #FFD23F; box-shadow: 0 0 70px #FFD23F;
+  transition: transform .8s cubic-bezier(.7,-0.3,.3,1.3),
+              background .8s, box-shadow .8s;
+}
+.toggle.night .knob {
+  transform: translateX(384px) rotate(360deg);
+  background: #E9ECF5; box-shadow: 0 0 50px #9DB2FF;
+}
+.crater {
+  position: absolute; border-radius: 50%; background: #C3C9DB;
+  opacity: 0; transition: opacity .5s .3s;
+}
+.toggle.night .crater { opacity: 1; }
+.star {
+  position: absolute; border-radius: 50%; background: #fff;
+  transform: translateY(-300px);
+  transition: transform .7s cubic-bezier(.2,.8,.2,1.2);
+}
+.toggle.night .star { transform: translateY(0); }
+.cloud {
+  position: absolute; background: #fff; border-radius: 999px;
+  transition: transform .8s ease-in;
+}
+.toggle.night .cloud { transform: translateY(240px); }
+/* </reel> */
+</style></head>
+<body>
+<div class="wrap">
+  <div class="toggle" id="toggle" role="switch" aria-checked="false" aria-label="Dark mode" tabindex="0">
+    <div class="cloud" style="width:190px;height:70px;right:50px;top:150px"></div>
+    <div class="cloud" style="width:138px;height:55px;right:188px;top:188px;transition-delay:.06s"></div>
+    <div class="cloud" style="width:112px;height:48px;right:88px;top:88px;opacity:.85;transition-delay:.12s"></div>
+    <div class="knob">
+      <div class="crater" style="width:48px;height:48px;left:48px;top:52px"></div>
+      <div class="crater" style="width:30px;height:30px;left:122px;top:120px"></div>
+      <div class="crater" style="width:22px;height:22px;left:72px;top:148px"></div>
+    </div>
+  </div>
+  <div class="label" id="label" aria-live="polite">Light mode</div>
+</div>
+<p class="credit">Free from <a href="https://qodesign.dev/?utm_source=github&utm_medium=demo&utm_campaign=free_repo" target="_blank" rel="noopener">qodesign.dev</a></p>
+<script>
+  // stars: scattered on the left half (where the night sky shows)
+  const t = document.getElementById('toggle');
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('i'); s.className = 'star';
+    const r = (n) => (Math.sin(i * 97.13 + n) * 43758.5453) % 1;
+    s.style.left = 30 + Math.abs(r(1)) * 340 + 'px';
+    s.style.top = 22 + Math.abs(r(2)) * 212 + 'px';
+    s.style.transitionDelay = (Math.abs(r(3)) * .35).toFixed(2) + 's';
+    const k = 4 + Math.abs(r(4)) * 6; s.style.width = s.style.height = k + 'px';
+    t.prepend(s);
+  }
+// <reel>
+toggle.addEventListener('click', () => {
+  const night = toggle.classList.toggle('night');
+  document.body.classList.toggle('night', night);
+  toggle.setAttribute('aria-checked', night);
+  label.textContent = night ? 'Dark mode' : 'Light mode';
+});
+// </reel>
+  t.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); t.click(); } });
+  // hands-free demo: flips every 2.6 s while idle. Real input stops it; 4 s of quiet starts it again. ?demo=0 turns it off.
+  if (new URLSearchParams(location.search).get('demo') !== '0') {
+    let last = -1e9;
+    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, e => { if (e.isTrusted) last = performance.now(); }, { passive: true }));
+    setTimeout(() => t.click(), 1200);
+    setInterval(() => { if (performance.now() - last > 4000 && !document.hidden) t.click(); }, 2600);
+  }
+</script>
+</body></html>
