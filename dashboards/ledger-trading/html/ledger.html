@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ledger: trading desk dashboard · qodesign</title>
+<meta name="description" content="A free, animated trading dashboard in one HTML file: live candlesticks with a crosshair, a flashing order book, an order ticket, portfolio donut, watchlist and trades table.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22%3E%3Crect x=%226%22 y=%226%22 width=%2216%22 height=%2216%22 rx=%224%22 fill=%22%23C6FF3D%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Ledger, a free dashboard by qodesign.dev (MIT).
+ * Hallmark · page: dashboard · genre: technical/dense · theme: qodesign ink (brand tokens)
+ * states: default · hover · focus · active · disabled · loading · error · success */
+:root{
+  --ink:#0A0A0D; --ink-2:#0E0F14; --panel:#111218; --panel-2:#161821; --line:#262A36; --line-soft:#1C1F29;
+  --text:#F4F4F6; --muted:#8A8FA3; --faint:#5C6378;
+  --up:#C6FF3D; --down:#FF5C7A; --violet:#8B6CFF; --cyan:#5EE1FF; --amber:#FFB547;
+  --font-ui:'Space Grotesk',system-ui,-apple-system,Segoe UI,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-lg:16px; --r-md:10px;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{background:var(--ink);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--up);outline-offset:2px;border-radius:6px}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.up{color:var(--up)}.down{color:var(--down)}
+
+.page{min-height:100vh;background:radial-gradient(900px 420px at 12% -8%,color-mix(in srgb,var(--up) 7%,transparent),transparent 60%),radial-gradient(1000px 500px at 100% 0%,color-mix(in srgb,var(--violet) 12%,transparent),transparent 60%),var(--ink)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;height:60px;padding:0 20px;border-bottom:1px solid var(--line-soft);background:color-mix(in srgb,var(--ink) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;letter-spacing:-.3px}
+.tabs{position:relative;display:flex;gap:2px;height:100%}
+.tabs button{position:relative;height:100%;padding:0 14px;border:0;background:none;color:var(--muted);font-weight:600;transition:color .2s}
+.tabs button:hover,.tabs button[aria-selected="true"]{color:var(--text)}
+.tab-ink{position:absolute;bottom:-1px;left:0;height:2px;border-radius:2px;background:var(--up);transition:transform .45s var(--ease-spring),width .45s var(--ease-spring)}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.pill{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font-size:13px;color:var(--muted)}
+.pill b{color:var(--text);font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 20%,transparent)}
+.avatar{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),var(--cyan));color:var(--ink);font-weight:700;font-size:13px}
+
+.ticker{overflow:hidden;border-bottom:1px solid var(--line-soft);background:var(--ink-2);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.ticker-track{display:flex;width:max-content;animation:marquee 48s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.tk{display:flex;align-items:center;gap:8px;height:36px;padding:0 18px;font-size:12px;white-space:nowrap;border-right:1px solid var(--line-soft)}
+.tk b{font-weight:600}.tk .num{color:var(--text)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+.wrap{padding:16px 20px 40px;display:grid;grid-template-columns:minmax(0,1fr) 320px 300px;gap:16px}
+.card{position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--panel-2) 70%,transparent),var(--panel));border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0;
+  opacity:0;transform:translateY(14px);animation:rise .7s var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes rise{to{opacity:1;transform:none}}
+.card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:28px;flex-wrap:wrap}
+.card-h h2{margin:0;font-size:14px;font-weight:600}
+.card-h .sub{color:var(--muted);font-size:12px}
+.card-h .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+.chart-card{grid-column:1;grid-row:1 / span 2}
+.book-card{grid-column:2;grid-row:1 / span 2}
+.ticket-card{grid-column:3;grid-row:1}
+.pf-card{grid-column:3;grid-row:2 / span 2}
+.watch-card{grid-column:2;grid-row:3}
+.trades-card{grid-column:1;grid-row:3}
+
+/* market header */
+.mkt{display:flex;flex-wrap:wrap;align-items:center;gap:18px 26px;margin-bottom:14px}
+.pair{display:flex;align-items:center;gap:10px}
+.coin{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--ink);flex:none}
+.pair b{font-size:18px}.pair small{display:block;color:var(--muted);font-size:12px}
+.price{font-family:var(--font-mono);font-size:30px;font-weight:600;letter-spacing:-1px;font-variant-numeric:tabular-nums;padding:0 6px;border-radius:8px;transition:color .3s}
+.price.fu{animation:fu .7s var(--ease-out)}.price.fd{animation:fd .7s var(--ease-out)}
+@keyframes fu{0%{background:color-mix(in srgb,var(--up) 22%,transparent)}100%{background:transparent}}
+@keyframes fd{0%{background:color-mix(in srgb,var(--down) 22%,transparent)}100%{background:transparent}}
+.stat small{display:block;color:var(--muted);font-size:12px}.stat b{font-family:var(--font-mono);font-size:13px;font-weight:500}
+.seg{position:relative;display:flex;height:36px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2);margin-left:auto}
+.seg button{position:relative;z-index:1;min-width:40px;padding:0 10px;border:0;background:none;color:var(--muted);font-weight:600;font-size:12px;border-radius:7px;transition:color .25s}
+.seg button[aria-checked="true"]{color:var(--ink)}
+.seg button:hover:not([aria-checked="true"]){color:var(--text)}
+.seg-pill{position:absolute;top:3px;bottom:3px;left:0;border-radius:7px;background:var(--text);transition:transform .45s var(--ease-spring),width .45s var(--ease-spring)}
+
+.chart{position:relative;height:430px;touch-action:pan-y;user-select:none}
+.chart svg{width:100%;height:100%;display:block}
+.chart .gl{stroke:var(--line-soft)}
+.chart .ax{fill:var(--faint);font-family:var(--font-mono);font-size:10px}
+.ohlc{position:absolute;left:8px;top:4px;display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--font-mono);font-size:11px;color:var(--muted);pointer-events:none}
+.ohlc b{font-weight:500}
+.legend{display:flex;gap:12px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:2px;margin-right:6px;vertical-align:middle;border-radius:2px}
+
+/* order book */
+.book-head,.book-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px}
+.book-head{color:var(--faint);padding:0 6px 6px;border-bottom:1px solid var(--line-soft)}
+.book-head span:not(:first-child),.book-row span:not(:first-child){text-align:right}
+.book-side{display:flex;flex-direction:column;gap:1px;padding:4px 0}
+.book-row{position:relative;padding:3px 6px;font-family:var(--font-mono);border-radius:4px;cursor:pointer;transition:background .15s}
+.book-row:hover{background:color-mix(in srgb,var(--text) 5%,transparent)}
+.book-row i{position:absolute;top:1px;bottom:1px;right:0;border-radius:3px;transition:width .5s var(--ease-out);z-index:0}
+.book-row span{position:relative;z-index:1}
+.asks .book-row i{background:color-mix(in srgb,var(--down) 13%,transparent)}
+.bids .book-row i{background:color-mix(in srgb,var(--up) 11%,transparent)}
+.asks .book-row span:first-child{color:var(--down)}.bids .book-row span:first-child{color:var(--up)}
+.book-row.flash{animation:bflash .6s var(--ease-out)}
+@keyframes bflash{0%{background:color-mix(in srgb,var(--text) 14%,transparent)}100%{background:transparent}}
+.spread{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;margin:2px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.spread b{font-family:var(--font-mono);font-size:18px;font-weight:600}
+.spread small{color:var(--muted);font-size:12px}
+.ratio{display:flex;height:6px;border-radius:6px;overflow:hidden;margin-top:12px;gap:2px}
+.ratio i{display:block;height:100%;transition:width .8s var(--ease-out)}
+.ratio-l{display:flex;justify-content:space-between;font-size:11px;margin-top:6px;font-family:var(--font-mono)}
+
+/* order ticket */
+.side-t{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:12px;background:var(--ink-2);border:1px solid var(--line);margin-bottom:12px}
+.side-t button{position:relative;z-index:1;height:38px;border:0;border-radius:9px;background:none;font-weight:700;color:var(--muted);transition:color .25s}
+.side-t button[aria-checked="true"]{color:var(--ink)}
+.side-t .knob{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:9px;background:var(--up);transition:transform .45s var(--ease-spring),background .3s}
+.side-t.sell .knob{transform:translateX(100%);background:var(--down)}
+.otype{display:flex;gap:14px;margin-bottom:10px;font-size:13px}
+.otype button{border:0;background:none;padding:4px 0;color:var(--muted);font-weight:600;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;min-height:32px}
+.otype button[aria-pressed="true"]{color:var(--text);border-color:var(--text)}
+.field{display:flex;align-items:center;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2);margin-bottom:8px;transition:border-color .2s}
+.field:focus-within{border-color:color-mix(in srgb,var(--up) 55%,var(--line));box-shadow:0 0 0 3px rgba(198,255,61,.22)}
+.field label{color:var(--muted);font-size:12px;width:56px;flex:none}
+/* hig-disable-next-line css/outline-none -- the focus ring is drawn on the wrapper with :focus-within (inputs) or on the node core with :focus-visible (map nodes) */
+.field input{flex:1;min-width:0;border:0;background:none;outline:none;text-align:right;font-family:var(--font-mono);font-size:14px}
+.field em{font-style:normal;color:var(--faint);font-size:12px;margin-left:8px;width:34px;text-align:right}
+.field.disabled{opacity:.5}
+.slider{position:relative;height:28px;margin:6px 4px 4px}
+.slider input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;margin:0}
+.slider .rail{position:absolute;left:0;right:0;top:12px;height:4px;border-radius:4px;background:var(--line)}
+.slider .fill{position:absolute;left:0;top:12px;height:4px;border-radius:4px;background:var(--up);transition:width .2s}
+.slider .stop{position:absolute;top:9px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--panel);border:2px solid var(--line);transition:border-color .2s,background .2s}
+.slider .stop.on{border-color:var(--up);background:var(--up)}
+.slider .thumb{position:absolute;top:6px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--text);box-shadow:0 0 0 4px color-mix(in srgb,var(--up) 25%,transparent);transition:left .2s}
+.slider input:focus-visible ~ .thumb{outline:2px solid var(--up);outline-offset:2px}
+.sell-mode .slider .fill{background:var(--down)}.sell-mode .slider .stop.on{border-color:var(--down);background:var(--down)}.sell-mode .slider .thumb{box-shadow:0 0 0 4px color-mix(in srgb,var(--down) 25%,transparent)}
+.pcts{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);font-family:var(--font-mono);margin:0 0 10px}
+.tot{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:4px 0 12px}
+.tot b{color:var(--text);font-family:var(--font-mono);font-weight:600}
+.go{position:relative;width:100%;height:48px;border:0;border-radius:12px;background:var(--up);color:var(--ink);font-weight:700;font-size:15px;overflow:hidden;transition:transform .15s,background .3s,filter .2s}
+.go:hover{filter:brightness(1.06)}
+.go:active{transform:scale(.98)}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.sell-mode .go{background:var(--down);color:var(--text)}
+.go .sp{display:none;width:18px;height:18px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+.go.busy .sp{display:inline-block}
+.go.done{background:var(--text)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avail{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:10px}
+.avail b{color:var(--text);font-family:var(--font-mono);font-weight:500}
+.ferr{color:var(--down);font-size:12px;min-height:16px;margin:-2px 0 6px}
+
+/* portfolio */
+.bal small{color:var(--muted);font-size:12px}
+.bal b{display:block;font-family:var(--font-mono);font-size:28px;font-weight:600;letter-spacing:-1px;margin:2px 0}
+.bal span{font-size:12px;font-family:var(--font-mono)}
+.donut{display:flex;align-items:center;gap:16px;margin:14px 0 10px}
+.donut svg{width:132px;height:132px;flex:none;overflow:visible}
+.donut .seg-arc{fill:none;stroke-width:16;transition:stroke-width .25s var(--ease-out),opacity .25s;cursor:pointer}
+.donut .seg-arc.dim{opacity:.3}
+.donut .seg-arc.hot{stroke-width:22}
+.donut text{font-family:var(--font-mono);fill:var(--text);text-anchor:middle}
+.alloc{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.alloc button{display:flex;align-items:center;gap:8px;border:0;background:none;padding:4px 6px;border-radius:8px;font-size:12px;color:var(--muted);text-align:left;transition:background .2s,color .2s;min-height:30px}
+.alloc button:hover,.alloc button.hot{background:var(--panel-2);color:var(--text)}
+.alloc i{width:8px;height:8px;border-radius:2px;flex:none}
+.alloc b{margin-left:auto;font-family:var(--font-mono);color:var(--text);font-weight:500}
+.assets{display:flex;flex-direction:column;margin-top:6px}
+.asset{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line-soft)}
+.asset .coin{width:28px;height:28px;font-size:10px}
+.asset b{font-size:13px}.asset small{display:block;color:var(--muted);font-size:11px;font-family:var(--font-mono)}
+.asset .v{text-align:right;font-family:var(--font-mono);font-size:13px}
+.asset .v small{text-align:right}
+
+/* watchlist */
+.wl{display:flex;flex-direction:column}
+.wl button{display:grid;grid-template-columns:28px minmax(0,1fr) 70px 78px;gap:10px;align-items:center;padding:8px 6px;border:0;border-radius:10px;background:none;text-align:left;transition:background .2s;min-height:44px}
+.wl button:hover{background:var(--panel-2)}
+.wl button[aria-pressed="true"]{background:color-mix(in srgb,var(--up) 7%,var(--panel-2));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--up) 25%,transparent)}
+.wl .coin{width:28px;height:28px;font-size:10px}
+.wl b{font-size:13px}.wl small{display:block;color:var(--muted);font-size:11px}
+.wl svg{width:70px;height:26px}
+.wl .px{text-align:right;font-family:var(--font-mono);font-size:12px}
+.wl .px small{text-align:right;font-family:var(--font-mono)}
+
+/* trades table */
+.tt{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.tt .tabs2{display:flex;gap:4px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2)}
+.tt .tabs2 button{height:30px;padding:0 12px;border:0;border-radius:7px;background:none;color:var(--muted);font-weight:600;font-size:12px;transition:background .2s,color .2s}
+.tt .tabs2 button[aria-selected="true"]{background:var(--panel-2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.chips{display:flex;gap:6px}
+.chips button{height:32px;min-width:44px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--ink-2);color:var(--muted);font-size:12px;font-weight:600;transition:background .2s,color .2s,transform .15s}
+.chips button:active{transform:scale(.96)}
+.chips button[aria-pressed="true"]{background:var(--text);color:var(--ink);border-color:var(--text)}
+.tsearch{margin-left:auto;display:flex;align-items:center;gap:6px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2);min-width:180px;color:var(--muted)}
+.tsearch:focus-within{border-color:color-mix(in srgb,var(--up) 55%,var(--line));box-shadow:0 0 0 3px rgba(198,255,61,.22)}
+/* hig-disable-next-line css/outline-none -- the focus ring is drawn on the wrapper with :focus-within (inputs) or on the node core with :focus-visible (map nodes) */
+.tsearch input{border:0;background:none;outline:none;flex:1;min-width:0;font-size:13px;color:var(--text)}
+.tbl-wrap{overflow:auto;max-height:360px;border:1px solid var(--line-soft);border-radius:var(--r-md);overscroll-behavior:contain}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:640px}
+thead th{position:sticky;top:0;z-index:2;background:var(--panel-2);text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:0;border-bottom:1px solid var(--line)}
+thead th button{display:flex;align-items:center;gap:6px;width:100%;height:36px;padding:0 12px;border:0;background:none;color:inherit;font-weight:600}
+thead th.r button{justify-content:flex-end}
+thead th button:hover{color:var(--text)}
+thead th button svg{width:10px;height:10px;opacity:.3;transition:transform .25s,opacity .2s}
+thead th[aria-sort="ascending"] button,thead th[aria-sort="descending"] button{color:var(--text)}
+thead th[aria-sort="ascending"] button svg{opacity:1;transform:rotate(180deg)}
+thead th[aria-sort="descending"] button svg{opacity:1}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+tbody td.r{text-align:right;font-family:var(--font-mono);font-size:12px}
+tbody td.m{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:color-mix(in srgb,var(--text) 4%,transparent)}
+tbody tr.enter{animation:rowin .45s var(--ease-out) backwards;animation-delay:calc(var(--r,0) * 30ms)}
+tbody tr.new{animation:flash 1.6s var(--ease-out)}
+@keyframes rowin{from{opacity:0;transform:translateY(6px)}}
+@keyframes flash{0%{background:color-mix(in srgb,var(--up) 18%,transparent)}100%{background:transparent}}
+.side-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.side-tag.buy{color:var(--up);background:color-mix(in srgb,var(--up) 12%,transparent)}
+.side-tag.sell{color:var(--down);background:color-mix(in srgb,var(--down) 12%,transparent)}
+.st{font-size:12px;color:var(--muted)}.st.filled{color:var(--up)}.st.open{color:var(--cyan)}
+.cancel{height:28px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--muted);font-size:12px;transition:color .2s,border-color .2s}
+.cancel:hover{color:var(--down);border-color:color-mix(in srgb,var(--down) 50%,var(--line))}
+.empty{padding:36px 12px;text-align:center;color:var(--muted);white-space:normal}
+.pager{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.pager .pages{display:flex;gap:4px;margin-left:auto;align-items:center}
+.pager button{min-width:32px;height:32px;padding:0 8px;border-radius:8px;border:1px solid var(--line);background:var(--ink-2);color:var(--muted);font-family:var(--font-mono);font-size:12px;transition:background .2s,color .2s,transform .15s}
+.pager button:hover:not(:disabled){color:var(--text)}
+.pager button:active:not(:disabled){transform:scale(.94)}
+.pager button[aria-current="page"]{background:var(--up);color:var(--ink);border-color:var(--up)}
+.pager button:disabled{opacity:.35;cursor:not-allowed}
+
+.toast{position:fixed;left:50%;bottom:22px;z-index:40;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);box-shadow:0 20px 50px -12px rgba(0,0,0,.8);font-size:13px;transform:translate(-50%,120%);opacity:0;transition:transform .5s var(--ease-spring),opacity .3s}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.toast i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--up);color:var(--ink);font-style:normal;font-weight:700;font-size:12px}
+.foot-credit{grid-column:1 / -1;color:var(--faint);font-size:12px;text-align:center;padding-top:6px}
+.foot-credit a{color:var(--muted)}
+
+@media (max-width:1320px){
+  .wrap{grid-template-columns:minmax(0,1fr) 300px}
+  .chart-card{grid-column:1;grid-row:auto}
+  .book-card{grid-column:2;grid-row:1 / span 2}
+  .ticket-card{grid-column:2;grid-row:auto}
+  .pf-card{grid-column:2;grid-row:auto}
+  .trades-card{grid-column:1;grid-row:2 / span 2}
+  .watch-card{grid-column:1;grid-row:auto}
+}
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr);padding:12px 12px 32px;gap:12px}
+  .chart-card,.book-card,.ticket-card,.pf-card,.trades-card,.watch-card{grid-column:1;grid-row:auto}
+  .ticket-card{order:1}.book-card{order:2}.pf-card{order:3}.watch-card{order:4}.trades-card{order:5}.foot-credit{order:6}
+  .topbar{gap:10px;padding:0 12px;height:56px}
+  .tabs{overflow-x:auto;scrollbar-width:none}
+  .tabs button{padding:0 10px;white-space:nowrap}
+  .tb-r .pill{display:none}
+  .chart{height:300px}
+  .price{font-size:24px}
+  .mkt{gap:10px 18px}
+  .mkt .stat.hide-s{display:none}
+  .seg{margin-left:0;width:100%}.seg button{flex:1}
+  .tsearch{min-width:0;width:100%;margin-left:0}
+  .logo span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .card{opacity:1;transform:none}
+  .ticker-track{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div class="logo"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="2" width="22" height="22" rx="7" fill="#161821" stroke="#262A36"/><path d="M8 17V9M13 17v-5M18 17V7" stroke="#C6FF3D" stroke-width="2.4" stroke-linecap="round"/></svg><span>ledger</span></div>
+    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs">
+      <button role="tab" aria-selected="true">Trade</button><button role="tab" aria-selected="false" tabindex="-1">Portfolio</button><button role="tab" aria-selected="false" tabindex="-1">Markets</button><button role="tab" aria-selected="false" tabindex="-1">Earn</button>
+      <span class="tab-ink" id="tabInk" aria-hidden="true"></span>
+    </nav>
+    <div class="tb-r">
+      <div class="pill"><i class="dot" aria-hidden="true"></i><span>Markets open</span><b class="num" id="clock">--:--:--</b></div>
+      <div class="pill"><span>Paper account</span></div>
+      <div class="avatar" aria-label="Signed in as Ana Ilie" role="img">AI</div>
+    </div>
+  </header>
+  <div class="ticker" aria-label="Market ticker"><div class="ticker-track" id="ticker"></div></div>
+
+  <main class="wrap">
+    <section class="card chart-card" style="--i:0" aria-label="Price chart">
+      <div class="mkt">
+        <div class="pair"><span class="coin" id="pairCoin" style="background:#FFB547">₿</span><div><b id="pairName">BTC / USD</b><small id="pairFull">Bitcoin</small></div></div>
+        <div><span class="price" id="price">0.00</span></div>
+        <div class="stat"><small>24h change</small><b id="chg" class="up">+0.00%</b></div>
+        <div class="stat hide-s"><small>24h high</small><b id="hi">0</b></div>
+        <div class="stat hide-s"><small>24h low</small><b id="lo">0</b></div>
+        <div class="stat"><small>24h volume</small><b id="vol">0</b></div>
+        <div class="seg" role="radiogroup" aria-label="Candle interval" id="tf">
+          <div class="seg-pill" id="tfPill" aria-hidden="true"></div>
+          <button role="radio" aria-checked="false" tabindex="-1" data-tf="1m">1m</button>
+          <button role="radio" aria-checked="true" data-tf="15m">15m</button>
+          <button role="radio" aria-checked="false" tabindex="-1" data-tf="1H">1H</button>
+          <button role="radio" aria-checked="false" tabindex="-1" data-tf="4H">4H</button>
+          <button role="radio" aria-checked="false" tabindex="-1" data-tf="1D">1D</button>
+        </div>
+      </div>
+      <div class="chart" id="chart">
+        <svg id="chartSvg" role="img" aria-label="Candlestick chart with volume"></svg>
+        <div class="ohlc" id="ohlc" aria-live="off"></div>
+      </div>
+      <div class="legend" aria-hidden="true"><span><i style="background:#8B6CFF"></i>MA 20</span><span><i style="background:#5EE1FF"></i>MA 50</span><span><i style="background:#262A36;height:8px"></i>volume</span></div>
+    </section>
+
+    <section class="card book-card" style="--i:1" aria-label="Order book">
+      <div class="card-h"><h2>Order book</h2><div class="r"><span class="sub" id="bookStep">step 0.50</span></div></div>
+      <div class="book-head"><span>Price (USD)</span><span>Size (BTC)</span><span>Total</span></div>
+      <div class="book-side asks" id="asks"></div>
+      <div class="spread"><b class="num" id="mid">0.00</b><small id="spread">spread 0.50</small></div>
+      <div class="book-side bids" id="bids"></div>
+      <div class="ratio" aria-hidden="true"><i id="rB" style="background:#C6FF3D;width:50%"></i><i id="rS" style="background:#FF5C7A;width:50%"></i></div>
+      <div class="ratio-l"><span class="up" id="rBl">B 50%</span><span class="down" id="rSl">50% S</span></div>
+    </section>
+
+    <section class="card ticket-card" style="--i:2" aria-label="Place an order" id="ticket">
+      <div class="side-t" role="radiogroup" aria-label="Side" id="sideT"><span class="knob" aria-hidden="true"></span>
+        <button role="radio" aria-checked="true" data-side="buy">Buy</button><button role="radio" aria-checked="false" tabindex="-1" data-side="sell">Sell</button></div>
+      <div class="otype" role="group" aria-label="Order type" id="otype"><button aria-pressed="true" data-t="limit">Limit</button><button aria-pressed="false" data-t="market">Market</button></div>
+      <div class="field" id="fPrice"><label for="inPrice">Price</label><input id="inPrice" inputmode="decimal" autocomplete="off"><em>USD</em></div>
+      <div class="field"><label for="inAmt">Amount</label><input id="inAmt" inputmode="decimal" autocomplete="off" value="0.0000"><em>BTC</em></div>
+      <div class="slider" id="slider"><span class="rail"></span><span class="fill" id="sFill"></span>
+        <span class="stop" style="left:0%"></span><span class="stop" style="left:25%"></span><span class="stop" style="left:50%"></span><span class="stop" style="left:75%"></span><span class="stop" style="left:100%"></span>
+        <input type="range" min="0" max="100" step="1" value="0" id="inPct" aria-label="Share of available balance"><span class="thumb" id="sThumb"></span></div>
+      <div class="pcts" aria-hidden="true"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+      <div class="ferr" id="ferr" role="alert"></div>
+      <div class="tot"><span>Total</span><b id="total">0.00 USD</b></div>
+      <button class="go" id="go"><span class="sp" aria-hidden="true"></span><span id="goLabel">Buy BTC</span></button>
+      <div class="avail"><span>Available</span><b id="avail">24,180.00 USD</b></div>
+    </section>
+
+    <section class="card pf-card" style="--i:3" aria-label="Portfolio">
+      <div class="card-h"><h2>Portfolio</h2><div class="r"><span class="sub">paper money</span></div></div>
+      <div class="bal"><small>Total balance</small><b id="bal">$0.00</b><span class="up" id="balChg">+$1,284.20 (2.74%) today</span></div>
+      <div class="donut"><svg viewBox="-70 -70 140 140" id="donut" role="img" aria-label="Allocation by asset"></svg><div class="alloc" id="alloc"></div></div>
+      <div class="assets" id="assets"></div>
+    </section>
+
+    <section class="card watch-card" style="--i:4" aria-label="Watchlist">
+      <div class="card-h"><h2>Watchlist</h2><div class="r"><span class="sub">tap to chart</span></div></div>
+      <div class="wl" id="wl"></div>
+    </section>
+
+    <section class="card trades-card" style="--i:5" aria-label="Orders and trades">
+      <div class="tt">
+        <div class="tabs2" role="tablist" aria-label="Table" id="ttabs"><button role="tab" aria-selected="true" data-v="history">Trade history</button><button role="tab" aria-selected="false" data-v="open">Open orders <span class="num" id="openN">0</span></button></div>
+        <div class="chips" role="group" aria-label="Side filter" id="sideF"><button aria-pressed="true" data-s="all">All</button><button aria-pressed="false" data-s="buy">Buys</button><button aria-pressed="false" data-s="sell">Sells</button></div>
+        <label class="tsearch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">Filter by pair</span><input id="tq" placeholder="Filter by pair" autocomplete="off"></label>
+      </div>
+      <div class="tbl-wrap"><table aria-label="Trades"><thead><tr><th aria-sort="descending" data-k="ts"><button>Time<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th aria-sort="none" data-k="pair"><button>Pair<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th aria-sort="none" data-k="side"><button>Side<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th class="r" aria-sort="none" data-k="price"><button>Price<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th class="r" aria-sort="none" data-k="amount"><button>Amount<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th class="r" aria-sort="none" data-k="total"><button>Total<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th><th aria-sort="none" data-k="status"><button>Status<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></th></tr></thead><tbody id="tb"></tbody></table></div>
+      <div class="pager" id="pager"></div>
+    </section>
+    <p class="foot-credit">Ledger is a free template by <a href="https://qodesign.dev/?utm_source=github&amp;utm_medium=demo&amp;utm_campaign=free_repo" target="_blank" rel="noopener">qodesign.dev</a>. Prices are simulated.</p>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><i>✓</i><span id="toastMsg"></span></div>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const params = new URLSearchParams(location.search);
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+let reduce = mq.matches; mq.addEventListener && mq.addEventListener('change', e => { reduce = e.matches; });
+const DEMO = params.get('demo') !== '0';
+const C = { up: '#C6FF3D', down: '#FF5C7A', violet: '#8B6CFF', cyan: '#5EE1FF', amber: '#FFB547', line: '#262A36', soft: '#1C1F29', text: '#F4F4F6', muted: '#8A8FA3' };
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = rng(42);
+const rand = (a, b) => a + (b - a) * R();
+const fmt = (n, d = 2) => n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const compact = n => n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' : n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : n.toFixed(0);
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+function tween(from, to, ms, step, done) {
+  if (reduce || ms <= 0) { step(to); if (done) done(); return; }
+  const t0 = performance.now();
+  const f = now => { const p = Math.min(1, (now - t0) / ms); step(from + (to - from) * easeOut(p)); if (p < 1) requestAnimationFrame(f); else if (done) done(); };
+  requestAnimationFrame(f);
+}
+
+/* assets (simulated prices) */
+const ASSETS = [
+  { s: 'BTC', name: 'Bitcoin', px: 67412.5, chg: 2.41, col: '#FFB547', g: '₿', hold: 0.412, dp: 2, vol: 28.4e9 },
+  { s: 'ETH', name: 'Ethereum', px: 3284.18, chg: 1.12, col: '#8B6CFF', g: 'Ξ', hold: 3.9, dp: 2, vol: 14.1e9 },
+  { s: 'SOL', name: 'Solana', px: 168.42, chg: -0.84, col: '#5EE1FF', g: 'S', hold: 28, dp: 2, vol: 3.2e9 },
+  { s: 'AAPL', name: 'Apple', px: 228.31, chg: 0.37, col: '#F4F4F6', g: '', hold: 12, dp: 2, vol: 5.1e9 },
+  { s: 'NVDA', name: 'Nvidia', px: 131.07, chg: 3.18, col: '#C6FF3D', g: 'N', hold: 20, dp: 2, vol: 31.7e9 },
+  { s: 'EUR', name: 'Euro', px: 1.0842, chg: -0.12, col: '#FF5C7A', g: '€', hold: 0, dp: 4, vol: 1.9e9 },
+];
+ASSETS.forEach(a => { a.open = a.px / (1 + a.chg / 100); a.hist = Array.from({ length: 30 }, (_, i) => a.open * (1 + (R() - .45) * .02 + i * a.chg / 100 / 30)); a.hist.push(a.px); });
+let cur = ASSETS[0];
+
+/* ticker */
+const tickerEl = $('#ticker');
+function drawTicker() {
+  const one = ASSETS.concat([{ s: 'GOLD', name: 'Gold', px: 2391.4, chg: 0.22 }, { s: 'SPX', name: 'S&P 500', px: 5864.67, chg: 0.41 }, { s: 'DOGE', name: 'Dogecoin', px: 0.1384, chg: -2.07, dp: 4 }])
+    .map(a => `<span class="tk"><b>${a.s}</b><span class="num">${fmt(a.px, a.dp || 2)}</span><span class="num ${a.chg >= 0 ? 'up' : 'down'}">${a.chg >= 0 ? '▲' : '▼'} ${Math.abs(a.chg).toFixed(2)}%</span></span>`).join('');
+  tickerEl.innerHTML = one + one;
+}
+
+/* tabs underline */
+const tabs = $('#tabs'), ink = $('#tabInk');
+function placeInk() { const b = $('[aria-selected="true"]', tabs); ink.style.width = b.offsetWidth - 20 + 'px'; ink.style.transform = `translateX(${b.offsetLeft + 10}px)`; }
+tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $$('button', tabs).forEach(x => { x.setAttribute('aria-selected', x === b); x.tabIndex = x === b ? 0 : -1; }); placeInk(); });
+
+/* candles */
+const TF = { '1m': { n: 72, vol: .0016, sec: 60 }, '15m': { n: 64, vol: .0042, sec: 900 }, '1H': { n: 60, vol: .0075, sec: 3600 }, '4H': { n: 56, vol: .012, sec: 14400 }, '1D': { n: 52, vol: .024, sec: 86400 } };
+let tf = '15m', candles = [], chartDrawn = false;
+function genCandles(a, key) {
+  const { n, vol } = TF[key]; const out = []; let p = a.px * (1 - vol * n * .08 * Math.sign(a.chg || 1));
+  const now = Math.floor(Date.now() / 1000 / TF[key].sec) * TF[key].sec;
+  for (let i = 0; i < n; i++) {
+    const o = p, drift = (a.px - p) / (n - i) * .9, c = o + drift + (R() - .5) * o * vol * 2;
+    const h = Math.max(o, c) + R() * o * vol * .9, l = Math.min(o, c) - R() * o * vol * .9;
+    out.push({ t: now - (n - 1 - i) * TF[key].sec, o, h, l, c, v: rand(.4, 1.6) * (1 + Math.abs(c - o) / o / vol) });
+    p = c;
+  }
+  out[n - 1].c = a.px; out[n - 1].h = Math.max(out[n - 1].h, a.px); out[n - 1].l = Math.min(out[n - 1].l, a.px);
+  return out;
+}
+const ma = (arr, k) => arr.map((_, i) => i < k - 1 ? null : arr.slice(i - k + 1, i + 1).reduce((s, x) => s + x.c, 0) / k);
+const chart = $('#chart'), svg = $('#chartSvg'), ohlcEl = $('#ohlc');
+let geom = null, hoverI = null;
+function drawChart() {
+  const W = chart.clientWidth || 700, H = chart.clientHeight || 430, pr = 62, pt = 26, volH = H * .18, pb = 22, n = candles.length;
+  const lo = Math.min(...candles.map(c => c.l)), hi = Math.max(...candles.map(c => c.h)), pad = (hi - lo) * .08;
+  const mn = lo - pad, mx = hi + pad, vmax = Math.max(...candles.map(c => c.v));
+  const cw = (W - pr) / n, bw = Math.max(2, cw * .62);
+  const X = i => i * cw + cw / 2, Y = v => pt + (1 - (v - mn) / (mx - mn)) * (H - pt - pb - volH - 8);
+  const VY = v => H - pb - v / vmax * volH;
+  geom = { X, Y, cw, W, H, pr, n, mn, mx };
+  let g = '';
+  for (let k = 0; k <= 5; k++) { const v = mn + (mx - mn) * k / 5, y = Y(v); g += `<line class="gl" x1="0" x2="${W - pr}" y1="${y}" y2="${y}"/><text class="ax" x="${W - pr + 8}" y="${y + 3}">${fmt(v, cur.dp)}</text>`; }
+  const labels = [0, Math.floor(n / 3), Math.floor(2 * n / 3), n - 1];
+  labels.forEach(i => { const d = new Date(candles[i].t * 1000); const s = tf === '1D' ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); g += `<text class="ax" x="${X(i)}" y="${H - 6}" text-anchor="middle">${s}</text>`; });
+  let cs = '';
+  candles.forEach((c, i) => {
+    const up = c.c >= c.o, col = up ? C.up : C.down, x = X(i);
+    const y1 = Y(Math.max(c.o, c.c)), y2 = Y(Math.min(c.o, c.c)), delay = chartDrawn || reduce ? 0 : i * 14;
+    cs += `<g class="cdl" style="${delay ? `opacity:0;animation:cin .5s ${delay}ms cubic-bezier(.16,1,.3,1) forwards` : ''}">
+      <rect x="${(x - bw / 2).toFixed(1)}" y="${VY(c.v).toFixed(1)}" width="${bw.toFixed(1)}" height="${(H - pb - VY(c.v)).toFixed(1)}" fill="${col}" opacity=".16" rx="1"/>
+      <line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${Y(c.h).toFixed(1)}" y2="${Y(c.l).toFixed(1)}" stroke="${col}" stroke-width="1.2"/>
+      <rect x="${(x - bw / 2).toFixed(1)}" y="${y1.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1.2, y2 - y1).toFixed(1)}" fill="${up ? col : col}" fill-opacity="${up ? .9 : .9}" rx="1.5"/></g>`;
+  });
+  const path = arr => arr.map((v, i) => v == null ? '' : `${arr[i - 1] == null ? 'M' : 'L'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join('');
+  const last = candles[n - 1], ly = Y(last.c), lup = last.c >= last.o;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = `<style>@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}</style>${g}
+    <g>${cs}</g>
+    <path d="${path(ma(candles, 20))}" fill="none" stroke="${C.violet}" stroke-width="1.6" class="ma"/>
+    <path d="${path(ma(candles, 50))}" fill="none" stroke="${C.cyan}" stroke-width="1.2" opacity=".75" class="ma"/>
+    <line x1="0" x2="${W - pr}" y1="${ly}" y2="${ly}" stroke="${lup ? C.up : C.down}" stroke-dasharray="3 3" opacity=".7"/>
+    <g transform="translate(${W - pr + 2} ${ly - 10})"><rect width="${pr - 4}" height="20" rx="5" fill="${lup ? C.up : C.down}"/><text x="${(pr - 4) / 2}" y="14" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#0A0A0D">${fmt(last.c, cur.dp)}</text></g>
+    <circle cx="${X(n - 1)}" cy="${ly}" r="3.5" fill="${lup ? C.up : C.down}"><animate attributeName="r" values="3.5;7;3.5" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
+    <g id="xh" style="display:none" pointer-events="none"><line id="xhv" y1="${pt}" y2="${H - pb}" stroke="${C.muted}" stroke-dasharray="3 3"/><line id="xhh" x1="0" x2="${W - pr}" stroke="${C.muted}" stroke-dasharray="3 3"/>
+      <g id="xhl"><rect width="${pr - 4}" height="20" rx="5" fill="${C.text}"/><text id="xht" x="${(pr - 4) / 2}" y="14" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#0A0A0D"></text></g></g>`;
+  chartDrawn = true;
+  drawOhlc(hoverI == null ? n - 1 : hoverI);
+  if (hoverI != null) placeXh(hoverI, null);
+}
+function drawOhlc(i) {
+  const c = candles[Math.min(i, candles.length - 1)], up = c.c >= c.o, cls = up ? 'up' : 'down', d = cur.dp;
+  const ch = (c.c - c.o) / c.o * 100;
+  ohlcEl.innerHTML = `<span>O <b class="${cls}">${fmt(c.o, d)}</b></span><span>H <b class="${cls}">${fmt(c.h, d)}</b></span><span>L <b class="${cls}">${fmt(c.l, d)}</b></span><span>C <b class="${cls}">${fmt(c.c, d)}</b></span><span class="${cls}">${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%</span>`;
+}
+function placeXh(i, yPx) {
+  const { X, Y, W, pr } = geom; const c = candles[i]; const x = X(i), y = yPx == null ? Y(c.c) : yPx;
+  const xh = $('#xh'); if (!xh) return; xh.style.display = '';
+  $('#xhv').setAttribute('x1', x); $('#xhv').setAttribute('x2', x); $('#xhh').setAttribute('y1', y); $('#xhh').setAttribute('y2', y);
+  $('#xhl').setAttribute('transform', `translate(${W - pr + 2} ${y - 10})`);
+  const v = geom.mx - (y - 26) / (geom.H - 26 - 22 - geom.H * .18 - 8) * (geom.mx - geom.mn);
+  $('#xht').textContent = fmt(v, cur.dp);
+  drawOhlc(i);
+}
+function chartHover(clientX, clientY) {
+  const r = chart.getBoundingClientRect(), sx = geom.W / r.width;
+  const x = (clientX - r.left) * sx, y = (clientY - r.top) * (geom.H / r.height);
+  if (x > geom.W - geom.pr) return chartLeave();
+  hoverI = Math.max(0, Math.min(geom.n - 1, Math.floor(x / geom.cw))); placeXh(hoverI, y);
+}
+function chartLeave() { hoverI = null; const xh = $('#xh'); if (xh) xh.style.display = 'none'; drawOhlc(candles.length - 1); }
+chart.addEventListener('pointermove', e => chartHover(e.clientX, e.clientY));
+chart.addEventListener('pointerleave', chartLeave);
+function setTf(k) {
+  if (k === tf) return; tf = k;
+  $$('#tf button').forEach(b => { const on = b.dataset.tf === k; b.setAttribute('aria-checked', on); b.tabIndex = on ? 0 : -1; });
+  placeTfPill(); candles = genCandles(cur, tf); chartDrawn = false; drawChart();
+}
+const tfEl = $('#tf'), tfPill = $('#tfPill');
+function placeTfPill() { const b = $('[aria-checked="true"]', tfEl); tfPill.style.width = b.offsetWidth + 'px'; tfPill.style.transform = `translateX(${b.offsetLeft}px)`; }
+tfEl.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTf(b.dataset.tf); });
+tfEl.addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const bs = $$('button', tfEl), i = bs.findIndex(b => b.dataset.tf === tf), n = bs[(i + (e.key === 'ArrowRight' ? 1 : bs.length - 1)) % bs.length];
+  setTf(n.dataset.tf); n.focus(); e.preventDefault();
+});
+
+/* market header */
+let shownPx = 0;
+function drawHeader(flash) {
+  const pe = $('#price'), dir = cur.px >= shownPx ? 'fu' : 'fd';
+  tween(shownPx, cur.px, shownPx ? 350 : 1300, v => { pe.textContent = fmt(v, cur.dp); });
+  if (flash && shownPx) { pe.classList.remove('fu', 'fd'); void pe.offsetWidth; pe.classList.add(dir); }
+  pe.style.color = cur.px >= shownPx || !shownPx ? '' : '';
+  shownPx = cur.px;
+  const ch = (cur.px - cur.open) / cur.open * 100, ce = $('#chg');
+  ce.textContent = `${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%`; ce.className = ch >= 0 ? 'up' : 'down';
+  $('#hi').textContent = fmt(Math.max(...candles.map(c => c.h)), cur.dp); $('#lo').textContent = fmt(Math.min(...candles.map(c => c.l)), cur.dp);
+  $('#vol').textContent = '$' + compact(cur.vol);
+}
+function setAsset(s) {
+  const a = ASSETS.find(x => x.s === s); if (!a || a === cur) return;
+  cur = a; shownPx = 0;
+  $('#pairCoin').textContent = a.g || a.s[0]; $('#pairCoin').style.background = a.col; $('#pairName').textContent = `${a.s} / USD`; $('#pairFull').textContent = a.name;
+  $('#goLabel').textContent = `${side === 'buy' ? 'Buy' : 'Sell'} ${a.s}`; $$('.field em')[1].textContent = a.s; $('.book-head span:nth-child(2)').textContent = `Size (${a.s})`;
+  candles = genCandles(a, tf); chartDrawn = false; drawChart(); drawHeader(false); buildBook(); syncTicket(true);
+  $$('#wl button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s));
+}
+
+/* order book */
+const asksEl = $('#asks'), bidsEl = $('#bids'), ROWS = innerWidth < 900 ? 6 : 9;
+let book = { asks: [], bids: [] };
+const step = () => cur.px > 1000 ? 0.5 : cur.px > 10 ? 0.01 : 0.0001;
+function buildBook() {
+  const s = step(); book = { asks: [], bids: [] };
+  for (let i = 0; i < ROWS; i++) { book.asks.push({ p: cur.px + s * (i + 1), q: rand(.05, 2.4) * (cur.px > 1000 ? 1 : 40) }); book.bids.push({ p: cur.px - s * i, q: rand(.05, 2.4) * (cur.px > 1000 ? 1 : 40) }); }
+  $('#bookStep').textContent = `step ${s}`;
+  asksEl.innerHTML = ''; bidsEl.innerHTML = '';
+  for (let i = 0; i < ROWS; i++) {
+    asksEl.insertAdjacentHTML('beforeend', `<div class="book-row" data-i="${i}"><i></i><span></span><span></span><span></span></div>`);
+    bidsEl.insertAdjacentHTML('beforeend', `<div class="book-row" data-i="${i}"><i></i><span></span><span></span><span></span></div>`);
+  }
+  drawBook(new Set());
+}
+function drawBook(changed) {
+  const qd = cur.px > 1000 ? 4 : 2;
+  const cumA = []; let a = 0; book.asks.forEach(r => { a += r.q; cumA.push(a); });
+  const cumB = []; let b = 0; book.bids.forEach(r => { b += r.q; cumB.push(b); });
+  const max = Math.max(a, b);
+  const aRows = $$('.book-row', asksEl).reverse(); // best ask sits next to the spread
+  book.asks.forEach((r, i) => { const el = aRows[i]; const s = el.children; s[1].textContent = fmt(r.p, cur.dp); s[2].textContent = fmt(r.q, qd); s[3].textContent = fmt(cumA[i], qd); s[0].style.width = (cumA[i] / max * 100) + '%'; el.dataset.p = r.p;
+    if (changed.has('a' + i)) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } });
+  const bRows = $$('.book-row', bidsEl);
+  book.bids.forEach((r, i) => { const el = bRows[i]; const s = el.children; s[1].textContent = fmt(r.p, cur.dp); s[2].textContent = fmt(r.q, qd); s[3].textContent = fmt(cumB[i], qd); s[0].style.width = (cumB[i] / max * 100) + '%'; el.dataset.p = r.p;
+    if (changed.has('b' + i)) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } });
+  const mid = (book.asks[0].p + book.bids[0].p) / 2;
+  $('#mid').textContent = fmt(mid, cur.dp); $('#mid').className = 'num ' + (cur.px >= cur.open ? 'up' : 'down');
+  $('#spread').textContent = `spread ${fmt(book.asks[0].p - book.bids[0].p, cur.dp)}`;
+  const bp = Math.round(b / (a + b) * 100);
+  $('#rB').style.width = bp + '%'; $('#rS').style.width = (100 - bp) + '%'; $('#rBl').textContent = `B ${bp}%`; $('#rSl').textContent = `${100 - bp}% S`;
+}
+function tickBook() {
+  const s = step(), changed = new Set();
+  book.asks.forEach((r, i) => { r.p = cur.px + s * (i + 1); if (R() < .35) { r.q = Math.max(.01, r.q * rand(.6, 1.5)); changed.add('a' + i); } });
+  book.bids.forEach((r, i) => { r.p = cur.px - s * i; if (R() < .35) { r.q = Math.max(.01, r.q * rand(.6, 1.5)); changed.add('b' + i); } });
+  drawBook(changed);
+}
+[asksEl, bidsEl].forEach(el => el.addEventListener('click', e => { const r = e.target.closest('.book-row'); if (!r) return; setOtype('limit'); $('#inPrice').value = fmt(+r.dataset.p, cur.dp).replace(/,/g, ''); syncTicket(false); }));
+
+/* order ticket */
+let side = 'buy', otype = 'limit', cash = 24180, busy = false;
+const sideT = $('#sideT'), ticket = $('#ticket');
+function setSide(s) {
+  side = s; sideT.classList.toggle('sell', s === 'sell'); ticket.classList.toggle('sell-mode', s === 'sell');
+  $$('button', sideT).forEach(b => { const on = b.dataset.side === s; b.setAttribute('aria-checked', on); b.tabIndex = on ? 0 : -1; });
+  $('#goLabel').textContent = `${s === 'buy' ? 'Buy' : 'Sell'} ${cur.s}`; syncTicket(false);
+}
+sideT.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setSide(b.dataset.side); });
+sideT.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = side === 'buy' ? 'sell' : 'buy'; setSide(n); $(`[data-side="${n}"]`).focus(); e.preventDefault(); } });
+function setOtype(t) { otype = t; $$('#otype button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t)); $('#fPrice').classList.toggle('disabled', t === 'market'); $('#inPrice').disabled = t === 'market'; syncTicket(false); }
+$('#otype').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setOtype(b.dataset.t); });
+const inPrice = $('#inPrice'), inAmt = $('#inAmt'), inPct = $('#inPct');
+const priceVal = () => otype === 'market' ? cur.px : (parseFloat(inPrice.value) || 0);
+const maxAmt = () => side === 'buy' ? cash / (priceVal() || cur.px) : cur.hold;
+function paintSlider(p) { $('#sFill').style.width = p + '%'; $('#sThumb').style.left = p + '%'; $$('.slider .stop').forEach((s, i) => s.classList.toggle('on', i * 25 <= p && p > 0)); }
+function syncTicket(resetPrice) {
+  if (resetPrice || !inPrice.value || otype === 'market') inPrice.value = cur.px.toFixed(cur.dp);
+  const amt = parseFloat(inAmt.value) || 0, total = amt * priceVal();
+  $('#total').textContent = `${fmt(total)} USD`;
+  const pct = Math.max(0, Math.min(100, maxAmt() ? amt / maxAmt() * 100 : 0)); inPct.value = Math.round(pct); paintSlider(pct);
+  $('#avail').textContent = side === 'buy' ? `${fmt(cash)} USD` : `${fmt(cur.hold, 4)} ${cur.s}`;
+  const err = amt > maxAmt() + 1e-9 ? (side === 'buy' ? 'Not enough USD for this amount.' : `You hold ${fmt(cur.hold, 4)} ${cur.s}.`) : '';
+  $('#ferr').textContent = err; $('#go').disabled = !!err || amt <= 0 || busy;
+}
+inPct.addEventListener('input', () => { const p = +inPct.value; inAmt.value = (maxAmt() * p / 100).toFixed(4); syncTicket(false); });
+inAmt.addEventListener('input', () => syncTicket(false));
+inPrice.addEventListener('input', () => syncTicket(false));
+const toast = $('#toast'); let toastT;
+function showToast(msg) { $('#toastMsg').textContent = msg; toast.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('on'), 2600); }
+$('#go').addEventListener('click', () => {
+  const amt = parseFloat(inAmt.value) || 0; if (!amt || busy) return;
+  busy = true; const go = $('#go'); go.classList.add('busy'); go.disabled = true; $('#goLabel').textContent = 'Placing order';
+  setTimeout(() => {
+    const p = priceVal(), total = amt * p, filled = otype === 'market' || (side === 'buy' ? p >= cur.px : p <= cur.px);
+    if (side === 'buy') { cash -= total; if (filled) cur.hold += amt; } else { if (filled) { cur.hold -= amt; cash += total; } }
+    addTrade({ pair: cur.s + '/USD', side, price: p, amount: amt, status: filled ? 'filled' : 'open' }, filled);
+    go.classList.remove('busy'); go.classList.add('done'); $('#goLabel').textContent = filled ? 'Filled ✓' : 'Order placed ✓';
+    showToast(`${side === 'buy' ? 'Bought' : 'Sold'} ${fmt(amt, 4)} ${cur.s} at ${fmt(p, cur.dp)}${filled ? '' : ' (open)'}`);
+    drawPortfolio(false);
+    setTimeout(() => { go.classList.remove('done'); busy = false; inAmt.value = '0.0000'; $('#goLabel').textContent = `${side === 'buy' ? 'Buy' : 'Sell'} ${cur.s}`; syncTicket(false); }, 1400);
+  }, reduce ? 200 : 900);
+});
+
+/* portfolio */
+const donut = $('#donut'), allocEl = $('#alloc'), assetsEl = $('#assets');
+let balShown = 0, hotSeg = null;
+const holdings = () => ASSETS.filter(a => a.hold > 0).map(a => ({ a, v: a.hold * a.px })).concat([{ a: { s: 'USD', name: 'Cash', col: '#5C6378', g: '$' }, v: cash }]);
+function drawPortfolio(first) {
+  const hs = holdings(), total = hs.reduce((s, h) => s + h.v, 0);
+  tween(balShown, total, first ? 1500 : 600, v => { $('#bal').textContent = '$' + fmt(v); }); balShown = total;
+  const r = 52, circ = 2 * Math.PI * r; let off = 0, s = '';
+  hs.forEach((h, i) => { const frac = h.v / total, len = Math.max(0, frac * circ - 3);
+    s += `<circle class="seg-arc${hotSeg && hotSeg !== h.a.s ? ' dim' : ''}${hotSeg === h.a.s ? ' hot' : ''}" data-s="${h.a.s}" r="${r}" stroke="${h.a.col}" stroke-dasharray="${first && !reduce ? `0 ${circ}` : `${len} ${circ - len}`}" stroke-dashoffset="${-off}" transform="rotate(-90)" style="transition:stroke-dasharray 1.1s ${i * 90}ms cubic-bezier(.16,1,.3,1),stroke-width .25s,opacity .25s" data-len="${len}" data-circ="${circ}"/>`;
+    off += frac * circ; });
+  const hot = hs.find(h => h.a.s === hotSeg);
+  s += `<text y="-2" font-size="15" font-weight="600">${hot ? (hot.v / total * 100).toFixed(1) + '%' : hs.length - 1}</text><text y="14" font-size="9" fill="${C.muted}">${hot ? hot.a.s : 'assets'}</text>`;
+  donut.innerHTML = s;
+  if (first && !reduce) requestAnimationFrame(() => requestAnimationFrame(() => $$('.seg-arc', donut).forEach(c => { const l = +c.dataset.len, ci = +c.dataset.circ; c.setAttribute('stroke-dasharray', `${l} ${ci - l}`); })));
+  allocEl.innerHTML = hs.map(h => `<button data-s="${h.a.s}" class="${hotSeg === h.a.s ? 'hot' : ''}"><i style="background:${h.a.col}"></i>${h.a.s}<b>${(h.v / total * 100).toFixed(1)}%</b></button>`).join('');
+  assetsEl.innerHTML = hs.filter(h => h.a.s !== 'USD').slice(0, 4).map(h => { const a = h.a; return `<div class="asset"><span class="coin" style="background:${a.col}">${a.g || a.s[0]}</span><div><b>${a.name}</b><small>${fmt(a.hold, a.px > 1000 ? 4 : 2)} ${a.s}</small></div><div class="v">$${fmt(h.v)}<small class="${a.chg >= 0 ? 'up' : 'down'}">${a.chg >= 0 ? '+' : ''}${a.chg.toFixed(2)}%</small></div></div>`; }).join('');
+}
+function setHot(s) { if (hotSeg === s) return; hotSeg = s; drawPortfolio(false); }
+donut.addEventListener('pointerover', e => { const c = e.target.closest('.seg-arc'); if (c) setHot(c.dataset.s); });
+donut.addEventListener('pointerleave', () => setHot(null));
+allocEl.addEventListener('pointerover', e => { const b = e.target.closest('button'); if (b) setHot(b.dataset.s); });
+allocEl.addEventListener('pointerleave', () => setHot(null));
+allocEl.addEventListener('focusin', e => { const b = e.target.closest('button'); if (b) setHot(b.dataset.s); });
+allocEl.addEventListener('focusout', () => setHot(null));
+
+/* watchlist */
+const wl = $('#wl');
+function sparkPath(h, w = 70, ht = 26) { const mn = Math.min(...h), mx = Math.max(...h); return h.map((v, i) => `${i ? 'L' : 'M'}${(i / (h.length - 1) * w).toFixed(1)} ${(ht - 2 - (v - mn) / ((mx - mn) || 1) * (ht - 4)).toFixed(1)}`).join(''); }
+function drawWatch() {
+  wl.innerHTML = ASSETS.map(a => { const up = a.px >= a.open, ch = (a.px - a.open) / a.open * 100;
+    return `<button data-s="${a.s}" aria-pressed="${a === cur}" aria-label="${a.name}, ${fmt(a.px, a.dp)} US dollars, ${ch >= 0 ? 'up' : 'down'} ${Math.abs(ch).toFixed(2)} percent"><span class="coin" style="background:${a.col}">${a.g || a.s[0]}</span><div><b>${a.s}</b><small>${a.name}</small></div>
+    <svg viewBox="0 0 70 26" aria-hidden="true"><path d="${sparkPath(a.hist)}" fill="none" stroke="${up ? C.up : C.down}" stroke-width="1.5"/></svg>
+    <div class="px">${fmt(a.px, a.dp)}<small class="${up ? 'up' : 'down'}">${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%</small></div></button>`; }).join('');
+}
+wl.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setAsset(b.dataset.s); });
+
+/* trades table */
+const TR = { view: 'history', side: 'all', q: '', key: 'ts', dir: 'desc', page: 1, per: 7 };
+let trades = [], tid = 0;
+{ let t = Date.now(); for (let i = 0; i < 46; i++) { t -= rand(40, 900) * 1000; const a = ASSETS[Math.floor(R() * 5)];
+  trades.push({ id: ++tid, ts: t, pair: a.s + '/USD', side: R() < .55 ? 'buy' : 'sell', price: a.px * (1 + (R() - .5) * .03), amount: (a.px > 1000 ? rand(.002, .4) : rand(.5, 30)), status: 'filled' }); }
+  [['ETH', 'buy', .98, 1.2], ['SOL', 'sell', 1.04, 12], ['BTC', 'buy', .985, .05]].forEach(([s, sd, k, q]) => { const a = ASSETS.find(x => x.s === s); trades.push({ id: ++tid, ts: Date.now() - rand(60, 600) * 1000, pair: s + '/USD', side: sd, price: a.px * k, amount: q, status: 'open' }); }); }
+trades.forEach(t => t.total = t.price * t.amount);
+const tb = $('#tb'), pagerEl = $('#pager');
+const tStr = ts => new Date(ts).toLocaleTimeString('en-GB', { hour12: false });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function viewTrades() {
+  const rows = trades.filter(t => (TR.view === 'open' ? t.status === 'open' : t.status === 'filled') && (TR.side === 'all' || t.side === TR.side) && (!TR.q || t.pair.toLowerCase().includes(TR.q)));
+  const k = TR.key, s = TR.dir === 'asc' ? 1 : -1;
+  return rows.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * s);
+}
+function drawTrades(opts) {
+  opts = opts || {};
+  const rows = viewTrades(), pages = Math.max(1, Math.ceil(rows.length / TR.per)); TR.page = Math.min(TR.page, pages);
+  const sl = rows.slice((TR.page - 1) * TR.per, TR.page * TR.per);
+  const dp = p => p > 10 ? 2 : 4;
+  tb.innerHTML = sl.length ? sl.map((t, i) => `<tr class="${opts.newId === t.id ? 'new' : opts.enter ? 'enter' : ''}" style="--r:${i}"><td class="m">${tStr(t.ts)}</td><td><b style="font-weight:600">${t.pair}</b></td>
+    <td><span class="side-tag ${t.side}">${t.side.toUpperCase()}</span></td><td class="r">${fmt(t.price, dp(t.price))}</td><td class="r">${fmt(t.amount, t.price > 1000 ? 4 : 2)}</td><td class="r">$${fmt(t.total)}</td>
+    <td>${t.status === 'open' ? `<span class="st open">open</span> <button class="cancel" data-id="${t.id}" aria-label="Cancel ${t.side} ${t.pair} order">Cancel</button>` : '<span class="st filled">filled</span>'}</td></tr>`).join('')
+    : `<tr><td colspan="7" class="empty">${TR.view === 'open' ? 'No open orders. Place a limit order away from the price to see one here.' : `No trades match “${esc(TR.q || TR.side)}”.`}</td></tr>`;
+  $('#openN').textContent = trades.filter(t => t.status === 'open').length;
+  const nums = []; for (let p = 1; p <= pages; p++) { if (p === 1 || p === pages || Math.abs(p - TR.page) <= 1) nums.push(p); else if (nums[nums.length - 1] !== '…') nums.push('…'); }
+  pagerEl.innerHTML = `<span class="num">${rows.length ? (TR.page - 1) * TR.per + 1 : 0}–${Math.min(rows.length, TR.page * TR.per)} of ${rows.length}</span><div class="pages"><button data-p="prev" aria-label="Previous page" ${TR.page === 1 ? 'disabled' : ''}>‹</button>${nums.map(p => p === '…' ? '<span aria-hidden="true">…</span>' : `<button data-p="${p}" aria-label="Page ${p}" ${p === TR.page ? 'aria-current="page"' : ''}>${p}</button>`).join('')}<button data-p="next" aria-label="Next page" ${TR.page === pages ? 'disabled' : ''}>›</button></div>`;
+}
+function addTrade(t, filled) { t.id = ++tid; t.ts = Date.now(); t.total = t.price * t.amount; trades.unshift(t); if (filled && TR.view === 'history' || !filled && TR.view === 'open') { TR.page = 1; drawTrades({ newId: t.id }); } else drawTrades(); }
+$('#ttabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; setView(b.dataset.v); });
+function setView(v) { TR.view = v; TR.page = 1; $$('#ttabs button').forEach(x => x.setAttribute('aria-selected', x.dataset.v === v)); drawTrades({ enter: true }); }
+function setSideF(s) { TR.side = s; TR.page = 1; $$('#sideF button').forEach(x => x.setAttribute('aria-pressed', x.dataset.s === s)); drawTrades({ enter: true }); }
+$('#sideF').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setSideF(b.dataset.s); });
+$('#tq').addEventListener('input', e => { TR.q = e.target.value.trim().toLowerCase(); TR.page = 1; drawTrades({ enter: true }); });
+$$('thead th').forEach(th => $('button', th).addEventListener('click', () => {
+  const k = th.dataset.k; TR.dir = TR.key === k ? (TR.dir === 'asc' ? 'desc' : 'asc') : (['ts', 'price', 'amount', 'total'].includes(k) ? 'desc' : 'asc'); TR.key = k;
+  $$('thead th').forEach(x => x.setAttribute('aria-sort', x.dataset.k === k ? (TR.dir === 'asc' ? 'ascending' : 'descending') : 'none')); drawTrades({ enter: true });
+}));
+pagerEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.disabled) return; const p = b.dataset.p; TR.page = p === 'prev' ? TR.page - 1 : p === 'next' ? TR.page + 1 : +p; drawTrades({ enter: true }); });
+tb.addEventListener('click', e => { const b = e.target.closest('.cancel'); if (!b) return; const t = trades.find(x => x.id === +b.dataset.id); if (!t) return;
+  if (t.side === 'buy') cash += t.total; trades = trades.filter(x => x !== t); drawTrades({ enter: true }); drawPortfolio(false); syncTicket(false); showToast(`Cancelled ${t.side} ${t.pair}`); });
+
+/* live market */
+let tick = 0, live = true;
+function tickMarket() {
+  tick++;
+  ASSETS.forEach(a => { const vol = a === cur ? .0009 : .0006; a.px = Math.max(a.px * .5, a.px * (1 + (R() - .48) * vol)); a.hist.push(a.px); a.hist.shift(); a.chg = (a.px - a.open) / a.open * 100; });
+  const last = candles[candles.length - 1];
+  last.c = cur.px; last.h = Math.max(last.h, cur.px); last.l = Math.min(last.l, cur.px); last.v += rand(.01, .08);
+  if (tick % 12 === 0) { candles.shift(); candles.push({ t: last.t + TF[tf].sec, o: cur.px, h: cur.px, l: cur.px, c: cur.px, v: rand(.2, .5) }); }
+  drawChart(); drawHeader(true); tickBook();
+  if (tick % 3 === 0) { drawWatch(); drawPortfolio(false); }
+  if (tick % 5 === 0 && TR.view === 'history') { const a = ASSETS[Math.floor(R() * 5)]; addTrade({ pair: a.s + '/USD', side: R() < .5 ? 'buy' : 'sell', price: a.px, amount: a.px > 1000 ? rand(.002, .2) : rand(.5, 20), status: 'filled' }, true); }
+  $('#clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+}
+
+/* autoplay tour */
+let lastInput = -1e9;
+const markInput = e => { if (e && e.isTrusted === false) return; lastInput = performance.now(); };
+['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(t => addEventListener(t, markInput, { passive: true }));
+addEventListener('pointermove', e => { if (e.pointerType === 'mouse') markInput(e); }, { passive: true });
+const idle = () => performance.now() - lastInput > 4000;
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const STEPS = [
+  async () => { for (let i = Math.floor(candles.length * .45); i < candles.length - 2 && idle(); i++) { hoverI = i; placeXh(i, null); await wait(reduce ? 140 : 60); } await wait(700); chartLeave(); },
+  async () => { inPct.value = 25; inPct.dispatchEvent(new Event('input')); await wait(500); inPct.value = 50; inPct.dispatchEvent(new Event('input')); await wait(900); },
+  async () => { setHot('ETH'); await wait(1300); setHot(null); },
+  async () => { setTf('1H'); await wait(1800); },
+  async () => { setSideF('buy'); await wait(1400); setSideF('all'); await wait(500); },
+  async () => { inAmt.value = '0.0000'; syncTicket(false); setTf('15m'); await wait(1400); },
+];
+async function demoLoop() {
+  if (!DEMO) return; await wait(2800);
+  for (let s = 0; ; s++) {
+    while (!idle() || document.hidden) await wait(500);
+    try { await STEPS[s % STEPS.length](); } catch (_) {}
+    await wait(700);
+  }
+}
+
+/* init */
+function init() {
+  drawTicker(); placeInk(); placeTfPill();
+  candles = genCandles(cur, tf); drawChart(); drawHeader(false);
+  buildBook(); syncTicket(true); drawPortfolio(true); drawWatch(); drawTrades({ enter: true });
+  $('#clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+  setInterval(() => { if (live && !document.hidden) tickMarket(); }, 1000);
+  demoLoop();
+}
+let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { placeInk(); placeTfPill(); drawChart(); }, 80); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { placeInk(); placeTfPill(); });
+init();
+})();
+</script>
+</body>
+</html>

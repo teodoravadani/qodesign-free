@@ -1,0 +1,43 @@
+/* demo page only: the browser window around the pricing section */
+
+:root{
+  --ink:#0A0A0D;--win:#0E0F15;--panel:#121319;--line:#262A36;--line2:#323747;
+  --text:#F4F4F6;--muted:#8A8FA3;--faint:#5C6378;--volt:#C6FF3D;--ultra:#8B6CFF;
+  --spring:cubic-bezier(.32,1.42,.56,1);--out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html,body,#root{margin:0;height:100%;background:var(--ink);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+#root{display:grid;place-items:center}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--volt);outline-offset:3px}
+.glow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(700px 460px at 50% 110%,rgba(139,108,255,.16),transparent 70%),radial-gradient(500px 380px at 8% 0%,rgba(198,255,61,.06),transparent 70%)}
+.win{position:relative;width:min(1120px,calc(100vw - 48px));height:min(760px,calc(100vh - 48px));background:var(--win);border:1px solid var(--line);border-radius:22px;box-shadow:0 50px 140px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.04);display:grid;grid-template-rows:52px 1fr;overflow:hidden}
+.bar{display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line)}
+.dots{display:flex;gap:7px}.dots i{width:11px;height:11px;border-radius:50%;background:#2A2E3B}
+.url{flex:1;max-width:380px;margin:0 auto;height:30px;border-radius:9px;background:#15161D;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:8px;font:500 12.5px 'JetBrains Mono',monospace;color:var(--muted)}
+.url svg{width:12px;height:12px;color:var(--volt)}
+.credit{font:500 12px 'JetBrains Mono',monospace;color:var(--muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center;padding:0 4px}
+.credit:hover{color:var(--volt)}
+.page{position:relative;padding:30px 40px 0;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.eyebrow{margin:0 0 10px;font:600 12px 'JetBrains Mono',monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--volt)}
+h1{margin:0;font:800 54px/.92 'Saira Condensed';letter-spacing:.2px;max-width:700px}
+h1 em{font-style:normal;color:var(--volt)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* demo cursor */
+.cursor{position:fixed;left:0;top:0;width:26px;height:26px;z-index:99;pointer-events:none;opacity:0;transition:opacity .3s;will-change:transform}
+.cursor.on{opacity:1}
+.cursor svg{width:26px;height:26px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));transition:transform .12s}
+.cursor.down svg{transform:scale(.82)}
+.ringfx{position:fixed;width:44px;height:44px;margin:-22px;border-radius:50%;border:2px solid var(--volt);pointer-events:none;z-index:98;animation:ringfx .5s var(--out) forwards}
+@keyframes ringfx{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+
+@media (max-width:900px){
+  .page{padding:22px 0 0}
+  h1{font-size:44px}
+}
+@media (max-width:640px){
+  .win{width:100%;height:100vh;height:100dvh;border-radius:0;border:0}
+  .url{display:none}.bar .sp{flex:1}
+}
+@media (prefers-reduced-motion:reduce){ .cursor{transition:none} }
