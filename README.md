@@ -1,5 +1,7 @@
 # qodesign-free
 
+[![npm](https://img.shields.io/npm/v/qodesign-free?color=8B6CFF&label=npm)](https://www.npmjs.com/package/qodesign-free) [![license](https://img.shields.io/npm/l/qodesign-free?color=C6FF3D)](LICENSE)
+
 Free animated React components and two full dashboards for Next.js, Vite and Lovable apps. Each one installs with the shadcn CLI and is written in TypeScript with Tailwind CSS and Framer Motion. MIT licensed.
 
 **[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
@@ -9,6 +11,19 @@ npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stac
 ```
 
 That copies the source into `components/<name>/` and installs `framer-motion`. The code is yours to edit from there.
+
+## Or install from npm
+
+```bash
+npm i qodesign-free framer-motion
+```
+
+```tsx
+import { Toaster, toast, PricingSwitch, UploadDropzone, DayNightToggle } from 'qodesign-free';
+// or one at a time: 'qodesign-free/toast-stack', 'qodesign-free/orbit-dashboard', ...
+```
+
+Each component brings its own stylesheet and starts with `'use client'`, so you can drop it into a Next.js server page. Day / Night Toggle is styled with Tailwind classes, so add `node_modules/qodesign-free/dist/**/*.js` to your Tailwind `content` (v3) or an `@source` line (v4). The shadcn route above is better when you want to edit the source.
 
 | | |
 |---|---|
