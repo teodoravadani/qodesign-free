@@ -4,7 +4,7 @@
   "title": "Pricing Switch",
   "description": "Monthly/yearly pricing switch with a stretchy pill, odometer prices, a 2-months-free badge and a featured card with a spinning border. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {

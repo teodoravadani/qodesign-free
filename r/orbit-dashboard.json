@@ -4,7 +4,7 @@
   "title": "Orbit: infrastructure observability dashboard",
   "description": "Dark ops dashboard: KPI cards with count-up and sparklines, animated service map, p50/p95/p99 latency chart with crosshair, uptime, regions, cluster rings, deploys and a filterable events table. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {

@@ -4,7 +4,7 @@
   "title": "Day / Night Toggle",
   "description": "Theme switch where the sun rolls into a moon, clouds fall away and stars drop in. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {

@@ -4,7 +4,7 @@
   "title": "Toast Stack",
   "description": "Toasts that stack like a deck, fan out on hover with the page blurred behind, swipe away, and morph from spinner to check for promises. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {

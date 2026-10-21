@@ -4,7 +4,7 @@
   "title": "Upload Dropzone",
   "description": "Drag-and-drop upload zone: the border lights up, a shockwave rolls out on drop, each file gets its own progress ring that pops into a check, failures shake and offer Retry. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {

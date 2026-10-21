@@ -4,7 +4,7 @@
   "title": "Ledger: trading desk dashboard",
   "description": "Dark trading screen: candlesticks with MA lines and volume, crosshair OHLC, flashing order book, buy/sell ticket, portfolio donut, watchlist and trades table. Simulated prices. Free, MIT, by qodesign.dev.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion@11.18.2"
   ],
   "files": [
     {
