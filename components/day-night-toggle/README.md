@@ -47,7 +47,7 @@ npm run build    # static build in react/dist
 
 ## Use it
 
-Dependencies: `react`, `react-dom`, `framer-motion` 11.18.2, Tailwind CSS 3 (make sure Tailwind scans the component's folder).
+Dependencies: `react`, `react-dom`, `framer-motion` 11.18.2, Tailwind CSS 3 or 4 (make sure Tailwind scans the component's folder).
 
 ```tsx
 import DayNightToggle from './components/DayNightToggle';
