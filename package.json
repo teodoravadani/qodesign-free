@@ -1,0 +1,115 @@
+{
+  "name": "qodesign-free",
+  "version": "0.1.0",
+  "description": "Free animated React components and dashboards for Next.js and Tailwind: toast stack, pricing switch, upload dropzone, day/night toggle, and two live dashboards. Framer Motion, TypeScript, 'use client' ready.",
+  "keywords": [
+    "react",
+    "nextjs",
+    "tailwind",
+    "framer-motion",
+    "motion",
+    "animation",
+    "components",
+    "ui",
+    "shadcn",
+    "dashboard",
+    "toast",
+    "pricing",
+    "dropzone",
+    "dark-mode-toggle",
+    "typescript"
+  ],
+  "homepage": "https://teodoravadani.github.io/qodesign-free/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teodoravadani/qodesign-free.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teodoravadani/qodesign-free/issues"
+  },
+  "license": "MIT",
+  "author": "Teodor (qodesign.dev)",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./toast-stack": {
+      "types": "./dist/toast-stack.d.ts",
+      "import": "./dist/toast-stack.js"
+    },
+    "./pricing-switch": {
+      "types": "./dist/pricing-switch.d.ts",
+      "import": "./dist/pricing-switch.js"
+    },
+    "./upload-dropzone": {
+      "types": "./dist/upload-dropzone.d.ts",
+      "import": "./dist/upload-dropzone.js"
+    },
+    "./day-night-toggle": {
+      "types": "./dist/day-night-toggle.d.ts",
+      "import": "./dist/day-night-toggle.js"
+    },
+    "./orbit-dashboard": {
+      "types": "./dist/orbit-dashboard.d.ts",
+      "import": "./dist/orbit-dashboard.js"
+    },
+    "./ledger-dashboard": {
+      "types": "./dist/ledger-dashboard.d.ts",
+      "import": "./dist/ledger-dashboard.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/postbuild.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "framer-motion": ">=11"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "framer-motion": "^11.11.0"
+  },
+  "typesVersions": {
+    "*": {
+      "toast-stack": [
+        "./dist/toast-stack.d.ts"
+      ],
+      "pricing-switch": [
+        "./dist/pricing-switch.d.ts"
+      ],
+      "upload-dropzone": [
+        "./dist/upload-dropzone.d.ts"
+      ],
+      "day-night-toggle": [
+        "./dist/day-night-toggle.d.ts"
+      ],
+      "orbit-dashboard": [
+        "./dist/orbit-dashboard.d.ts"
+      ],
+      "ledger-dashboard": [
+        "./dist/ledger-dashboard.d.ts"
+      ]
+    }
+  }
+}
