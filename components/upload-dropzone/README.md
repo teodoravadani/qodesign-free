@@ -93,4 +93,4 @@ Tokens at the top of `upload-dropzone.css`: `--volt` (border on drag, rings, tot
 
 ## More like this
 
-This one is free (MIT). The paid components are $3 each, or $29 for all of them, at [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
+This one is free (MIT). More animated pieces live at [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
