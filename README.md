@@ -2,11 +2,21 @@
 
 [![npm](https://img.shields.io/npm/v/qodesign-free?color=8B6CFF&label=npm)](https://www.npmjs.com/package/qodesign-free) [![license](https://img.shields.io/npm/l/qodesign-free?color=C6FF3D)](LICENSE)
 
+[![Orbit dashboard demo](dashboards/orbit-observability/preview.gif)](https://teodoravadani.github.io/qodesign-free/orbit/)
+
 Animated React + Tailwind components for people who build with Cursor, Claude Code, v0 or Lovable. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
 
 Four components and two full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
 
 **[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
+
+The shadcn CLI needs a `components.json` in your project. In a fresh Next.js app, run this once first:
+
+```bash
+npx shadcn@latest init
+```
+
+Then add any piece:
 
 ```bash
 npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stack.json
