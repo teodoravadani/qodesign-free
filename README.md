@@ -8,9 +8,9 @@ Animated React + Tailwind components for AI-first builders who ship with Cursor,
 
 Four components and two full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
 
-**[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
+Tested in a clean Next.js 15 app (React 19, Tailwind v4, App Router, `next build`) and in the Vite + React 18 + Tailwind v3 demo project inside each folder. Peer dependencies are React 18 or 19 and framer-motion 11 or newer.
 
-There's also a free kit on qodesign.dev: the Day / Night Toggle, Toast Stack and Pricing Switch plus eight copy-paste prompts for Cursor, v0, Lovable or Claude Code. [Get the 2026 Glow-up Kit](https://qodesign.dev/free?utm_source=github&utm_medium=readme&utm_campaign=free_kit&utm_content=qodesign_free&src=github_readme).
+**[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
 
 The shadcn CLI needs a `components.json` in your project. In a fresh Next.js app, run this once first:
 
@@ -104,29 +104,11 @@ npm run dev
 - Everything respects Reduce Motion and has visible focus states and 44 px touch targets on phones.
 - The page keeps scrolling when your cursor or finger is over a component.
 - Data in the dashboards is simulated. Each README says which file to swap for your API.
+- Browser support: current Chrome, Edge, Firefox and Safari, Safari on iOS included. Some pieces use CSS `color-mix()`, so older browsers than Chrome and Edge 111, Safari 16.2 and Firefox 113 won't style them correctly.
 
-## Paid, from the same author: 16 more on qodesign.dev
+## More pieces
 
-Everything above is free and MIT. This section is not: these pieces are paid and are not in this repo. They are sold on [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo), $3 each (the analytics dashboard is $9). Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
-
-- [Particle Morph](https://qodesign.dev/components/particle-morph?utm_source=github&utm_medium=readme&utm_campaign=free_repo): 9,000 particles that spring between a sphere, a word and a torus knot.
-- [Pull-Cord Login](https://qodesign.dev/components/pull-cord-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): pull the cord, the lamp turns on, the login form appears.
-- [Credit Card Checkout V1](https://qodesign.dev/components/credit-card-checkout-v1?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a live 3D card that fills in as you type and flips for the CVC.
-- [Shy Eyes Login](https://qodesign.dev/components/shy-eyes-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a mascot that watches you type and covers his eyes for the password.
-- [Hold to Delete](https://qodesign.dev/components/hold-to-delete?utm_source=github&utm_medium=readme&utm_campaign=free_repo): press and hold, then the file crumples into the bin.
-- [Dynamic Island Navbar](https://qodesign.dev/components/dynamic-island?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a pill navbar that morphs for notifications, music and search.
-- [Liquid Metal Blob](https://qodesign.dev/components/liquid-metal?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a drop of liquid chrome drawn live by a WebGL shader.
-- [Step-Up OTP Gate](https://qodesign.dev/components/otp-verify?utm_source=github&utm_medium=readme&utm_campaign=free_repo): arcs merge into one check and the blurred dashboard behind unlocks.
-- [Command-K Dashboard](https://qodesign.dev/components/dashboard-saas?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a whole SaaS app you drive from ⌘K.
-- [Receipt Morph Checkout](https://qodesign.dev/components/checkout-card?utm_source=github&utm_medium=readme&utm_campaign=free_repo): your card splits, unrolls into a receipt and gets stamped PAID.
-- [Liquid Glass Tab Bar](https://qodesign.dev/components/tabbar-liquid?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a glass drop that magnifies the tab under it.
-- [Spotlight Lamp Login](https://qodesign.dev/components/lamp-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a desk lamp finds each field in the dark.
-- [Stack Cart Drawer](https://qodesign.dev/components/cart-drawer?utm_source=github&utm_medium=readme&utm_campaign=free_repo): products fly into the cart and unfold into line items.
-- [Prompt Bloom](https://qodesign.dev/components/prompt-bloom?utm_source=github&utm_medium=readme&utm_campaign=free_repo): an AI chat composer where the prompt lifts into a message and the answer card blooms out of the input.
-- [Reflow Sidebar](https://qodesign.dev/components/reflow-sidebar?utm_source=github&utm_medium=readme&utm_campaign=free_repo): collapse the sidebar to an icon rail and the whole app reflows with it on a spring.
-- [Analytics Dashboard V1](https://qodesign.dev/components/analytics-dashboard-v1?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a dark analytics dashboard where every number counts up live ($9).
-
-**[All 16 for $29 in one payment](https://qodesign.dev/all-access?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**. Pro Lifetime also includes every piece released later: [see pricing](https://qodesign.dev/pricing?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
+More animated pieces live at [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
 
 ## Contributing
 
