@@ -1,7 +1,7 @@
 'use client';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import React, {
-  ReactNode, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState,
+  type ReactNode, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState,
 } from 'react';
 import './pricing-switch.css';
 

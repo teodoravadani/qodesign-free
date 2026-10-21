@@ -70,11 +70,12 @@ export default function DayNightToggle({
         aria-checked={night}
         aria-label={label}
         onClick={toggle}
-        className="relative block origin-top-left cursor-pointer overflow-hidden rounded-full border-0 p-0 outline-none focus-visible:ring-[10px] focus-visible:ring-[#8B6CFF] focus-visible:ring-offset-[8px] focus-visible:ring-offset-transparent"
+        className="relative block origin-top-left cursor-pointer overflow-hidden rounded-full border-0 p-0 outline-none focus-visible:[outline:10px_solid_#8B6CFF] focus-visible:[outline-offset:8px]"
         style={{
           width: 640,
           height: 256,
           transform: `scale(${scale})`,
+          // inline, so the keyboard focus ring above is an outline: a Tailwind ring is a box-shadow and would lose to this
           boxShadow: 'inset 0 10px 22px rgba(0,0,0,.25)',
           background: night ? 'linear-gradient(#0B1033, #27306B)' : 'linear-gradient(#5DB8FF, #A8DBFF)',
         }}

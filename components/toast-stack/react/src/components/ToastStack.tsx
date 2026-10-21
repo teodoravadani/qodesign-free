@@ -3,7 +3,7 @@ import {
   AnimatePresence, motion, useReducedMotion,
 } from 'framer-motion';
 import React, {
-  ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore,
+  type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore,
 } from 'react';
 import './toast-stack.css';
 
