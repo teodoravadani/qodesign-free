@@ -24,6 +24,8 @@ npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stac
 
 That copies the source into `components/<name>/` and installs `framer-motion` 11.18.2, the version we test with. The code is yours to edit from there.
 
+This route needs Tailwind CSS in your project for the Day / Night Toggle, because its source uses Tailwind classes. The other five bring their own CSS file and work without Tailwind. The npm route below needs no Tailwind at all.
+
 The registry index is at [`r/registry.json`](https://teodoravadani.github.io/qodesign-free/r/registry.json) and every item lives at `https://teodoravadani.github.io/qodesign-free/r/<name>.json`.
 
 ## Or install from npm
@@ -101,9 +103,9 @@ npm run dev
 - The page keeps scrolling when your cursor or finger is over a component.
 - Data in the dashboards is simulated. Each README says which file to swap for your API.
 
-## More components on qodesign.dev (paid)
+## Paid, from the same author: 16 more on qodesign.dev
 
-16 more pieces in the same style, $3 each (the analytics dashboard is $9). Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
+Everything above is free and MIT. This section is not: these pieces are paid and are not in this repo. They are sold on [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo), $3 each (the analytics dashboard is $9). Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
 
 - [Particle Morph](https://qodesign.dev/components/particle-morph?utm_source=github&utm_medium=readme&utm_campaign=free_repo): 9,000 particles that spring between a sphere, a word and a torus knot.
 - [Pull-Cord Login](https://qodesign.dev/components/pull-cord-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): pull the cord, the lamp turns on, the login form appears.
