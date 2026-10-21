@@ -15,7 +15,7 @@ Source of truth: react/src/components/PricingSwitch.tsx and react/src/components
 
 Steps:
 1. Look at my stack and find my current pricing page (ask me if there isn't one).
-2. Copy PricingSwitch.tsx and pricing-switch.css into my components folder. Install framer-motion if it's missing.
+2. Copy PricingSwitch.tsx and pricing-switch.css into my components folder. Install framer-motion@11.18.2 if it's missing.
 3. Read my real plans (names, monthly and yearly prices in USD, features) from my code or config. Don't invent prices. If yearly prices are missing, ask me.
 4. Replace my pricing cards with <PricingSwitch plans={...} header={...} />. Wire onSelect to my checkout or signup, passing the plan id and the billing period.
 5. If the yearly discount isn't "2 months free", change yearlyBadge to the real one.

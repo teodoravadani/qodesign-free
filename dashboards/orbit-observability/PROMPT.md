@@ -15,7 +15,7 @@ Source of truth: react/src/components/orbit/ (React + TypeScript + Framer Motion
 
 Steps:
 1. Look at my stack: framework and router, TypeScript or not, where components live, how global CSS is loaded.
-2. Copy the react/src/components/orbit/ folder into my components folder. Install framer-motion if it's missing. Load Space Grotesk and JetBrains Mono (or tell me which of my fonts you mapped them to).
+2. Copy the react/src/components/orbit/ folder into my components folder. Install framer-motion@11.18.2 if it's missing. Load Space Grotesk and JetBrains Mono (or tell me which of my fonts you mapped them to).
 3. Add a route that renders <OrbitDashboard autoplayDemo={false} />.
 4. If I use Next.js App Router, add "use client" at the top of OrbitDashboard.tsx.
 5. Run my type-check and build.

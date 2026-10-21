@@ -32,7 +32,7 @@ npm run build    # static build in react/dist
 
 ## Use it
 
-Dependencies: `react`, `react-dom`, `framer-motion`.
+Dependencies: `react`, `react-dom`, `framer-motion` 11.18.2.
 
 1. Copy `UploadDropzone.tsx` and `upload-dropzone.css` into your components folder.
 2. Give it an uploader. Without one, uploads are simulated, which is handy while you build the UI.

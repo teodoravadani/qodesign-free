@@ -15,7 +15,7 @@ Source of truth: react/src/components/DayNightToggle.tsx (React + TypeScript + T
 
 Steps:
 1. Look at my stack: framework, TypeScript or not, Tailwind or not, where components live, and how my dark mode works today (class on <html>, data attribute, CSS variables, next-themes).
-2. Copy the component into my components folder. If I don't use Tailwind, move its classes into a CSS module with the same values. Install framer-motion if it's missing.
+2. Copy the component into my components folder. If I don't use Tailwind, move its classes into a CSS module with the same values. Install framer-motion@11.18.2 if it's missing.
 3. Put it where my current theme switch is (or in the header) at width 120 to 180.
 4. Wire it to my theme: controlled with night and onChange, reading the saved theme on load so it doesn't flash the wrong state.
 5. Run my type-check and build.

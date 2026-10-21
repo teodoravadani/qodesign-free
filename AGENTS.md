@@ -10,10 +10,10 @@ Follow these steps in order when the user asks for a qodesign-free component. Ea
 ## 1. Install the package and its peer
 
 ```bash
-npm i qodesign-free framer-motion
+npm i qodesign-free framer-motion@11.18.2
 ```
 
-- `framer-motion` (11 or newer) is a peer dependency. It is not installed for you. Without it the build fails with `Module not found: Can't resolve 'framer-motion'`.
+- `framer-motion` is a peer dependency. We test with 11.18.2, so install that version. It is not installed for you. Without it the build fails with `Module not found: Can't resolve 'framer-motion'`.
 - Don't install `motion` instead of `framer-motion`. The package imports from `framer-motion`.
 - React 18 and 19 both work.
 

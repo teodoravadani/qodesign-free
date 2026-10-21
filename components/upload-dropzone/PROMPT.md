@@ -15,7 +15,7 @@ Source of truth: react/src/components/UploadDropzone.tsx and react/src/component
 
 Steps:
 1. Look at my stack and find how files are uploaded today (an API route, presigned S3/R2 URLs, Supabase Storage, UploadThing...). Ask me if there's nothing yet.
-2. Copy UploadDropzone.tsx and upload-dropzone.css into my components folder. Install framer-motion if it's missing.
+2. Copy UploadDropzone.tsx and upload-dropzone.css into my components folder. Install framer-motion@11.18.2 if it's missing.
 3. Write an `upload(file, onProgress, signal)` function for my backend. Use XMLHttpRequest (or the SDK's progress callback) so onProgress gets real numbers. Reject with a short readable message on failure. Abort on signal.
 4. Put <UploadDropzone upload={upload} /> on the page I name. Set maxSize and accept from my server's real limits.
 5. Use onAllDone to enable whatever comes next (save, publish, continue).

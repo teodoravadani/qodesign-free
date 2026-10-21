@@ -4,7 +4,7 @@
 
 [![Orbit dashboard demo](dashboards/orbit-observability/preview.gif)](https://teodoravadani.github.io/qodesign-free/orbit/)
 
-Animated React + Tailwind components for people who build with Cursor, Claude Code, v0 or Lovable. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
+Animated React + Tailwind components for AI-first builders who ship with Cursor, Lovable, v0 or Claude Code. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
 
 Four components and two full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
 
@@ -22,14 +22,14 @@ Then add any piece:
 npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stack.json
 ```
 
-That copies the source into `components/<name>/` and installs `framer-motion`. The code is yours to edit from there.
+That copies the source into `components/<name>/` and installs `framer-motion` 11.18.2, the version we test with. The code is yours to edit from there.
 
 The registry index is at [`r/registry.json`](https://teodoravadani.github.io/qodesign-free/r/registry.json) and every item lives at `https://teodoravadani.github.io/qodesign-free/r/<name>.json`.
 
 ## Or install from npm
 
 ```bash
-npm i qodesign-free framer-motion
+npm i qodesign-free framer-motion@11.18.2
 ```
 
 Import each component from its own path. You only ship the CSS for what you use (about 10 KB of CSS for the toast stack and the toggle, against about 90 KB from the package root, which pulls in both dashboards):
@@ -62,7 +62,7 @@ Each component brings its own stylesheet and starts with `'use client'`, so you 
 | Upload Dropzone | `npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/upload-dropzone.json` | [upload-dropzone.html](components/upload-dropzone/html/upload-dropzone.html) |
 | Day / Night Toggle | `npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/day-night-toggle.json` | [day-night-toggle.html](components/day-night-toggle/html/day-night-toggle.html) |
 
-No shadcn setup? Copy the folder under `react/src/components/` into your project and run `npm i framer-motion`.
+No shadcn setup? Copy the folder under `react/src/components/` into your project and run `npm i framer-motion@11.18.2`.
 
 **Next.js App Router:** every component file already starts with `'use client'`, so it works in a server page as is.
 
@@ -123,6 +123,10 @@ npm run dev
 - [Analytics Dashboard V1](https://qodesign.dev/components/analytics-dashboard-v1?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a dark analytics dashboard where every number counts up live ($9).
 
 **[All 16 for $29 in one payment](https://qodesign.dev/all-access?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**. Pro Lifetime also includes every piece released later: [see pricing](https://qodesign.dev/pricing?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
+
+## Contributing
+
+PRs welcome: bug fixes, new examples, a11y improvements. Open an issue first for big changes. [CONTRIBUTING.md](CONTRIBUTING.md) has the details.
 
 ## Licence
 

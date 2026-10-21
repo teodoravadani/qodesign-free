@@ -15,7 +15,7 @@ Source of truth: react/src/components/ToastStack.tsx and react/src/components/to
 
 Steps:
 1. Look at my stack: framework, TypeScript or not, where components live, how CSS gets loaded.
-2. Copy ToastStack.tsx and toast-stack.css into my components folder. Install framer-motion if it's missing.
+2. Copy ToastStack.tsx and toast-stack.css into my components folder. Install framer-motion@11.18.2 if it's missing.
 3. Render <Toaster /> once in my root layout.
 4. If I already use another toast library (sonner, react-hot-toast, react-toastify), list every call site and replace it with toast.success / toast.error / toast.info / toast.promise. Keep the messages the same.
 5. Wire one real async action of mine (a save, an upload, a deploy) to toast.promise so it shows the spinner and then the check.

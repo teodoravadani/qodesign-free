@@ -53,7 +53,7 @@ npm run build    # static build in react/dist
 
 ## Use it
 
-Dependencies: `react`, `react-dom`, `framer-motion`. Fonts: Space Grotesk and JetBrains Mono.
+Dependencies: `react`, `react-dom`, `framer-motion` 11.18.2. Fonts: Space Grotesk and JetBrains Mono.
 
 ```tsx
 import { OrbitDashboard } from './components/orbit/OrbitDashboard';

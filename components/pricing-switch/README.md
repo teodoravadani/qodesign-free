@@ -32,7 +32,7 @@ npm run build    # static build in react/dist
 
 ## Use it
 
-Dependencies: `react`, `react-dom`, `framer-motion`.
+Dependencies: `react`, `react-dom`, `framer-motion` 11.18.2.
 
 1. Copy `PricingSwitch.tsx` and `pricing-switch.css` into your components folder.
 2. Pass your plans.
