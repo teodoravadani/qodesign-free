@@ -2,7 +2,9 @@
 
 [![npm](https://img.shields.io/npm/v/qodesign-free?color=8B6CFF&label=npm)](https://www.npmjs.com/package/qodesign-free) [![license](https://img.shields.io/npm/l/qodesign-free?color=C6FF3D)](LICENSE)
 
-Free animated React components and two full dashboards for Next.js, Vite and Lovable apps. Each one installs with the shadcn CLI and is written in TypeScript with Tailwind CSS and Framer Motion. MIT licensed.
+Animated React + Tailwind components for people who build with Cursor, Claude Code, v0 or Lovable. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
+
+Four components and two full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
 
 **[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
 
@@ -11,6 +13,8 @@ npx shadcn@latest add https://teodoravadani.github.io/qodesign-free/r/toast-stac
 ```
 
 That copies the source into `components/<name>/` and installs `framer-motion`. The code is yours to edit from there.
+
+The registry index is at [`r/registry.json`](https://teodoravadani.github.io/qodesign-free/r/registry.json) and every item lives at `https://teodoravadani.github.io/qodesign-free/r/<name>.json`.
 
 ## Or install from npm
 
@@ -87,9 +91,9 @@ npm run dev
 - The page keeps scrolling when your cursor or finger is over a component.
 - Data in the dashboards is simulated. Each README says which file to swap for your API.
 
-## More components (paid, $3 each or $29 for all)
+## More components on qodesign.dev (paid)
 
-Same style, bigger pieces. Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
+16 more pieces in the same style, $3 each (the analytics dashboard is $9). Each one ships the same way: a React + TypeScript + Tailwind component, a PROMPT.md and an HTML version.
 
 - [Particle Morph](https://qodesign.dev/components/particle-morph?utm_source=github&utm_medium=readme&utm_campaign=free_repo): 9,000 particles that spring between a sphere, a word and a torus knot.
 - [Pull-Cord Login](https://qodesign.dev/components/pull-cord-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): pull the cord, the lamp turns on, the login form appears.
@@ -104,9 +108,11 @@ Same style, bigger pieces. Each one ships the same way: a React + TypeScript + T
 - [Liquid Glass Tab Bar](https://qodesign.dev/components/tabbar-liquid?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a glass drop that magnifies the tab under it.
 - [Spotlight Lamp Login](https://qodesign.dev/components/lamp-login?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a desk lamp finds each field in the dark.
 - [Stack Cart Drawer](https://qodesign.dev/components/cart-drawer?utm_source=github&utm_medium=readme&utm_campaign=free_repo): products fly into the cart and unfold into line items.
+- [Prompt Bloom](https://qodesign.dev/components/prompt-bloom?utm_source=github&utm_medium=readme&utm_campaign=free_repo): an AI chat composer where the prompt lifts into a message and the answer card blooms out of the input.
+- [Reflow Sidebar](https://qodesign.dev/components/reflow-sidebar?utm_source=github&utm_medium=readme&utm_campaign=free_repo): collapse the sidebar to an icon rail and the whole app reflows with it on a spring.
 - [Analytics Dashboard V1](https://qodesign.dev/components/analytics-dashboard-v1?utm_source=github&utm_medium=readme&utm_campaign=free_repo): a dark analytics dashboard where every number counts up live ($9).
 
-**[All-Access Pack: every component for $29](https://qodesign.dev/all-access?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
+**[All 16 for $29 in one payment](https://qodesign.dev/all-access?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**. Pro Lifetime also includes every piece released later: [see pricing](https://qodesign.dev/pricing?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
 
 ## Licence
 
