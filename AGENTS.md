@@ -3,6 +3,8 @@
 
 The same rules as `.cursor/rules/qodesign.mdc`, for Claude Code, Codex, Copilot, v0, Lovable and any other agent that reads AGENTS.md. Keep the two files in sync.
 
+Writing or editing animation code? Also follow `.cursor/rules/qodesign-motion.mdc`: plain Markdown rules for animation loops, reduced motion, scroll safety and cleanup that any agent can read.
+
 Follow these steps in order when the user asks for a qodesign-free component. Each one fixes a mistake agents made in testing.
 
 ## 1. Install the package and its peer

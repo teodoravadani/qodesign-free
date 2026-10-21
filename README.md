@@ -56,6 +56,10 @@ No shadcn setup? Copy the folder under `react/src/components/` into your project
 
 **No React?** Every item also comes as one HTML file (CSS and JS inline), linked in the table above.
 
+## Using with Cursor
+
+The repo ships two Cursor rules files: `.cursor/rules/qodesign.mdc` (installing and using these components in Next.js) and `.cursor/rules/qodesign-motion.mdc` (motion rules for any animated component: one rAF loop that pauses off-screen, reduced motion, transform/opacity only, passive listeners, no scroll traps, StrictMode-safe cleanup). Other agents can read `AGENTS.md`.
+
 ## What you get in each folder
 
 ```

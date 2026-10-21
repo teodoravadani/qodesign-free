@@ -1,0 +1,301 @@
+---
+description: Animation and motion rules for React / Next.js components (requestAnimationFrame loops, reduced motion, scroll safety, cleanup). Learned building the qodesign pieces; applies to any animated component, not only qodesign-free.
+globs: ["**/*.tsx", "**/*.jsx", "**/*.ts", "**/*.css"]
+alwaysApply: false
+---
+
+# Motion rules for AI agents
+
+Use these when you write or edit any animated component: a canvas loop, a framer-motion effect, a hover or drag interaction. Each rule comes from a bug we shipped or nearly shipped while building the qodesign pieces. Every rule has a short "no" and "yes" snippet. Copy the "yes" shape.
+
+## 1. One animation loop, booked one frame at a time, cancelled on unmount
+
+Keep the frame id in a ref. Book the next frame from inside the current one. Cancel it in the effect cleanup. Never start a loop from a click handler or from render.
+
+```tsx
+// no: a second click or a re-render starts a second loop, and nothing ever stops either one
+function onStart() {
+  const tick = () => { draw(); requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+```
+
+```tsx
+// yes
+const frame = useRef<number | null>(null);
+
+useEffect(() => {
+  const tick = (t: number) => {
+    draw(t);
+    frame.current = requestAnimationFrame(tick);
+  };
+  frame.current = requestAnimationFrame(tick);
+  return () => {
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    frame.current = null;
+  };
+}, []);
+```
+
+## 2. Pause when off-screen or when the tab is hidden
+
+An endless loop keeps burning CPU and battery after the visitor scrolls past it. Watch the element with `IntersectionObserver` and the tab with `visibilitychange`, and only run while both say visible.
+
+```tsx
+// no: runs at 60 fps forever, even 3000px below the fold
+useEffect(() => {
+  const tick = () => { draw(); requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}, []);
+```
+
+```tsx
+// yes
+useEffect(() => {
+  const el = ref.current;
+  if (!el) return;
+  let onScreen = false;
+  let id: number | null = null;
+
+  const tick = (t: number) => { draw(t); id = requestAnimationFrame(tick); };
+  const sync = () => {
+    const run = onScreen && document.visibilityState === 'visible';
+    if (run && id === null) id = requestAnimationFrame(tick);
+    if (!run && id !== null) { cancelAnimationFrame(id); id = null; }
+  };
+
+  const io = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); });
+  io.observe(el);
+  document.addEventListener('visibilitychange', sync);
+  return () => {
+    io.disconnect();
+    document.removeEventListener('visibilitychange', sync);
+    if (id !== null) cancelAnimationFrame(id);
+  };
+}, []);
+```
+
+## 3. Respect prefers-reduced-motion with a still frame
+
+When the visitor asks for reduced motion, draw one finished frame and stop. Don't render nothing, and don't keep the loop running slower. Listen for changes, because the setting can flip while the page is open.
+
+```tsx
+// no: ignores the setting
+<motion.div animate={{ x: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 2 }} />
+```
+
+```tsx
+// yes (framer-motion)
+import { motion, useReducedMotion } from 'framer-motion';
+
+const reduce = useReducedMotion();
+<motion.div
+  animate={reduce ? { x: 0 } : { x: [0, 40, 0] }}
+  transition={reduce ? { duration: 0 } : { repeat: Infinity, duration: 2 }}
+/>
+```
+
+```tsx
+// yes (plain loop): read it once, then follow changes
+const [reduce, setReduce] = useState(false);
+useEffect(() => {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  setReduce(mq.matches);
+  const onChange = () => setReduce(mq.matches);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}, []);
+// in the loop effect: if (reduce) { draw(finalTime); return; }
+```
+
+- Don't wrap anything in `<MotionConfig reducedMotion="never">`.
+- Read `matchMedia` inside an effect, never during render. On the server there is no `window`, and reading it in render causes a hydration mismatch.
+
+## 4. Animate transform and opacity only
+
+`top`, `left`, `width`, `height`, `margin` and `box-shadow` trigger layout or paint on every frame and drop frames on phones. Move things with `transform` (x, y, scale, rotate) and fade with `opacity`.
+
+```tsx
+// no
+<motion.div animate={{ left: open ? 240 : 0 }} />
+<motion.div className="bar" animate={{ width: `${progress}%` }} />
+```
+
+```tsx
+// yes
+<motion.div animate={{ x: open ? 240 : 0 }} />
+<motion.div className="bar" animate={{ scaleX: progress / 100 }} style={{ originX: 0 }} />
+```
+
+- For a size change that really must reflow the page (a sidebar opening), use framer-motion's `layout` prop on that one element. Don't hand-animate `width`.
+- A glow or shadow that pulses: put the shadow on a pseudo-element or a separate layer and animate its `opacity`.
+
+## 5. Don't read layout inside the frame loop
+
+Calling `getBoundingClientRect()`, `offsetWidth` or `getComputedStyle()` right after you wrote a style forces the browser to lay out the page again, every frame. Measure once and re-measure with `ResizeObserver`. In the loop, only write.
+
+```tsx
+// no: write, then read, 60 times a second
+const tick = () => {
+  el.style.transform = `translateX(${x}px)`;
+  const w = el.getBoundingClientRect().width; // forced layout
+  x = (x + 2) % w;
+  id = requestAnimationFrame(tick);
+};
+```
+
+```tsx
+// yes
+const width = useRef(0);
+useEffect(() => {
+  const el = ref.current;
+  if (!el) return;
+  const ro = new ResizeObserver(([entry]) => { width.current = entry.contentRect.width; });
+  ro.observe(el);
+  return () => ro.disconnect();
+}, []);
+// in the loop: x = (x + 2) % (width.current || 1); el.style.transform = `translateX(${x}px)`;
+```
+
+## 6. No React state per frame
+
+`setState` inside a frame loop or a `pointermove` handler re-renders the whole component 60 times a second. Keep per-frame values in a ref or a framer-motion `MotionValue` and write them to the DOM directly.
+
+```tsx
+// no
+const [pos, setPos] = useState({ x: 0, y: 0 });
+<div onPointerMove={(e) => setPos({ x: e.clientX, y: e.clientY })}>
+  <div className="dot" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }} />
+</div>
+```
+
+```tsx
+// yes
+import { motion, useMotionValue } from 'framer-motion';
+
+const x = useMotionValue(0);
+const y = useMotionValue(0);
+<div onPointerMove={(e) => { x.set(e.clientX); y.set(e.clientY); }}>
+  <motion.div className="dot" style={{ x, y }} />
+</div>
+```
+
+## 7. Passive listeners for scroll, touch, wheel and pointer movement
+
+A listener you add yourself for `scroll`, `wheel`, `touchstart`, `touchmove` or `pointermove` should be `{ passive: true }`. A non-passive one makes the browser wait for your handler before it scrolls.
+
+```tsx
+// no
+window.addEventListener('scroll', onScroll);
+```
+
+```tsx
+// yes
+window.addEventListener('scroll', onScroll, { passive: true });
+return () => window.removeEventListener('scroll', onScroll);
+```
+
+## 8. Scroll safety: never trap the page
+
+A wheel or swipe that starts on your component must still scroll the page. This is the bug buyers notice first: in testing, the page stopped scrolling whenever the mouse was over an admin table. Five ways components trap scroll, all banned:
+
+```tsx
+// no: preventDefault on wheel or touchmove over the component
+el.addEventListener('wheel', (e) => { e.preventDefault(); spin(e.deltaY); }, { passive: false });
+```
+
+```css
+/* no: locks the host page the moment the component's CSS is imported */
+html, body { overflow: hidden; }
+
+/* no: on a scroll container this blocks vertical scroll from ever reaching the page */
+.table-wrap { overflow-x: auto; overscroll-behavior: contain; }
+
+/* no on a large surface: a swipe that starts here can't scroll the page on phones */
+.big-button { touch-action: none; }
+
+/* no: a component root that covers the whole viewport */
+.root { position: fixed; inset: 0; }
+```
+
+```tsx
+// no: changing the page from a component
+document.body.style.overflow = 'hidden';
+```
+
+```css
+/* yes */
+.table-wrap { overflow-x: auto; overscroll-behavior-x: contain; } /* x only */
+.big-button { touch-action: pan-y; }  /* horizontal drag is yours, vertical swipe scrolls the page */
+.drag-handle { touch-action: none; }  /* fine on a small handle */
+```
+
+```tsx
+// yes: react to the wheel without blocking it
+el.addEventListener('wheel', (e) => spin(e.deltaY), { passive: true });
+```
+
+- A modal or drawer that really needs to lock scroll is the host app's call. Expose an `onOpenChange` prop and let the app lock its own page. Don't lock it from inside the component.
+- If the component has its own inner scroller, the page must take over once that scroller hits its end.
+
+## 9. will-change only while animating, on few elements
+
+`will-change` gives each element its own GPU layer. On hundreds of elements, or left on forever, it costs memory and can make things slower and blurry.
+
+```css
+/* no */
+.card, .row, .icon { will-change: transform, opacity; }
+```
+
+```tsx
+// yes: set it for the duration of a gesture, then remove it
+onPointerDown={() => { el.style.willChange = 'transform'; }}
+onPointerUp={() => { el.style.willChange = 'auto'; }}
+```
+
+- framer-motion already promotes the elements it animates. Don't add `will-change` on top of a `motion.*` element.
+- One long-running canvas or one element moving constantly is fine with a permanent `will-change: transform`.
+
+## 10. Survive React StrictMode's double mount
+
+In development, React mounts each component, runs its cleanup, then mounts it again. If the cleanup doesn't fully undo the effect, you get two loops, two observers or two listeners, and the animation runs at double speed. That only shows up in `next dev`, so check there.
+
+```tsx
+// no: a module-level flag. After StrictMode's cleanup the flag stays true and the loop never restarts,
+// and a second instance of the component never animates at all.
+let started = false;
+useEffect(() => {
+  if (started) return;
+  started = true;
+  requestAnimationFrame(tick);
+}, []);
+```
+
+```tsx
+// yes: every effect returns a cleanup that undoes exactly what it did
+useEffect(() => {
+  let id = requestAnimationFrame(function tick(t) { draw(t); id = requestAnimationFrame(tick); });
+  const io = new IntersectionObserver(onIntersect);
+  io.observe(ref.current!);
+  window.addEventListener('resize', onResize, { passive: true });
+  return () => {
+    cancelAnimationFrame(id);
+    io.disconnect();
+    window.removeEventListener('resize', onResize);
+  };
+}, []);
+```
+
+- Timers too: every `setTimeout` / `setInterval` id gets cleared in the cleanup.
+- Pass the same function reference to `removeEventListener` that you passed to `addEventListener`. An inline arrow can't be removed.
+
+## Before you say it's done
+
+1. `next build` and `tsc --noEmit` pass.
+2. In `next dev` (StrictMode on), the animation runs at normal speed, not double.
+3. Scroll the component out of view: the loop stops (DevTools Performance shows no frames from it). Switch tabs: it stops.
+4. Turn on reduced motion (DevTools > Rendering > Emulate CSS prefers-reduced-motion): a still, finished frame, no movement.
+5. With the pointer over the component, the mouse wheel scrolls the page. On a phone, a vertical swipe that starts on it scrolls the page.
+6. Search your diff: no `body.style.overflow`, no `overscroll-behavior: contain` without `-x`/`-y`, no `preventDefault` in a wheel or touchmove handler, no `top`/`left`/`width`/`height` in an animation.
+
+Install rules for the qodesign-free package itself are in `qodesign.mdc` next to this file. Repo: https://github.com/teodoravadani/qodesign-free
