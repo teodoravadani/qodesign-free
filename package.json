@@ -1,6 +1,6 @@
 {
   "name": "qodesign-free",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Free animated React components and dashboards for Next.js and Tailwind: toast stack, pricing switch, upload dropzone, day/night toggle, and two live dashboards. Framer Motion, TypeScript, 'use client' ready.",
   "keywords": [
     "react",

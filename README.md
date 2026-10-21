@@ -18,12 +18,18 @@ That copies the source into `components/<name>/` and installs `framer-motion`. T
 npm i qodesign-free framer-motion
 ```
 
+Import each component from its own path. You only ship the CSS for what you use (about 10 KB of CSS for the toast stack and the toggle, against about 90 KB from the package root, which pulls in both dashboards):
+
 ```tsx
-import { Toaster, toast, PricingSwitch, UploadDropzone, DayNightToggle } from 'qodesign-free';
-// or one at a time: 'qodesign-free/toast-stack', 'qodesign-free/orbit-dashboard', ...
+import { Toaster, toast } from 'qodesign-free/toast-stack';
+import { DayNightToggle } from 'qodesign-free/day-night-toggle';
+// also: 'qodesign-free/pricing-switch', 'qodesign-free/upload-dropzone',
+//       'qodesign-free/orbit-dashboard', 'qodesign-free/ledger-dashboard'
 ```
 
-Each component brings its own stylesheet and starts with `'use client'`, so you can drop it into a Next.js server page. Day / Night Toggle is styled with Tailwind classes, so add `node_modules/qodesign-free/dist/**/*.js` to your Tailwind `content` (v3) or an `@source` line (v4). The shadcn route above is better when you want to edit the source.
+`import { ... } from 'qodesign-free'` still works if you want everything in one line.
+
+Each component brings its own stylesheet and starts with `'use client'`, so you can drop it into a Next.js server page. No Tailwind needed, the Day / Night Toggle included (since 0.1.1 it ships its own compiled CSS, scoped to the component). The shadcn route above is better when you want to edit the source.
 
 | | |
 |---|---|

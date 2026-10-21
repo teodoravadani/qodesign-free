@@ -1,0 +1,28 @@
+/* Day / Night Toggle: compiled styles so the npm build works without Tailwind.
+   Scoped to .qd-dnt, so nothing leaks into your app. With Tailwind the same
+   class names on the component still apply; these just mirror them. */
+.qd-dnt { line-height: 0; }
+.qd-dnt .relative { position: relative; }
+.qd-dnt .absolute { position: absolute; }
+.qd-dnt .block { display: block; }
+.qd-dnt .origin-top-left { transform-origin: top left; }
+.qd-dnt .cursor-pointer { cursor: pointer; }
+.qd-dnt .overflow-hidden { overflow: hidden; }
+.qd-dnt .rounded-full { border-radius: 9999px; }
+.qd-dnt .border-0 { border-width: 0; border-style: solid; }
+.qd-dnt .p-0 { padding: 0; }
+.qd-dnt .outline-none { outline: 2px solid transparent; outline-offset: 2px; }
+.qd-dnt .bg-white { background-color: #fff; }
+.qd-dnt .bg-\[\#C3C9DB\] { background-color: #C3C9DB; }
+.qd-dnt [role="switch"] {
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.qd-dnt [role="switch"] * { box-sizing: border-box; }
+/* the button sets its own inset box-shadow inline, so the focus ring is an outline */
+.qd-dnt [role="switch"]:focus-visible { outline: 10px solid #8B6CFF; outline-offset: 8px; }

@@ -63,7 +63,7 @@ export default function DayNightToggle({
   };
 
   return (
-    <div style={{ width, height: 256 * scale }}>
+    <div className="qd-dnt" style={{ width, height: 256 * scale }}>
       <button
         type="button"
         role="switch"
