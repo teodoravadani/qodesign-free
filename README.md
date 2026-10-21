@@ -10,6 +10,8 @@ Four components and two full dashboards, written in TypeScript with Tailwind CSS
 
 **[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
 
+There's also a free kit on qodesign.dev: the Day / Night Toggle, Toast Stack and Pricing Switch plus eight copy-paste prompts for Cursor, v0, Lovable or Claude Code. [Get the 2026 Glow-up Kit](https://qodesign.dev/free?utm_source=github&utm_medium=readme&utm_campaign=free_kit&utm_content=qodesign_free&src=github_readme).
+
 The shadcn CLI needs a `components.json` in your project. In a fresh Next.js app, run this once first:
 
 ```bash
