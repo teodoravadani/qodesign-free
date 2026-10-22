@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/qodesign-free?color=8B6CFF&label=npm)](https://www.npmjs.com/package/qodesign-free) [![license](https://img.shields.io/npm/l/qodesign-free?color=C6FF3D)](LICENSE)
 
-**Free kit:** [qodesign.dev/free](https://qodesign.dev/free?utm_source=github&utm_content=qodesign-free_readme)
+**Free kit:** 8 AI prompts for Cursor, v0 and Lovable, a 16-prompt PDF and one more piece of your choice. [Get it at qodesign.dev/free](https://qodesign.dev/free?utm_source=github&utm_campaign=qodesign-free&utm_content=readme_top)
 
 [![Orbit dashboard demo](dashboards/orbit-observability/preview.gif)](https://teodoravadani.github.io/qodesign-free/orbit/)
 
