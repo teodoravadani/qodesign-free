@@ -2,6 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/qodesign-free?color=8B6CFF&label=npm)](https://www.npmjs.com/package/qodesign-free) [![license](https://img.shields.io/npm/l/qodesign-free?color=C6FF3D)](LICENSE)
 
+**Free kit:** [qodesign.dev/free](https://qodesign.dev/free?utm_source=github&utm_content=qodesign-free_readme)
+
 [![Orbit dashboard demo](dashboards/orbit-observability/preview.gif)](https://teodoravadani.github.io/qodesign-free/orbit/)
 
 Animated React + Tailwind components for AI-first builders who ship with Cursor, Lovable, v0 or Claude Code. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
