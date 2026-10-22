@@ -10,7 +10,7 @@ Four components and two full dashboards, written in TypeScript with Tailwind CSS
 
 Tested in a clean Next.js 15 app (React 19, Tailwind v4, App Router, `next build`) and in the Vite + React 18 + Tailwind v3 demo project inside each folder. Peer dependencies are React 18 or 19 and framer-motion 11 or newer.
 
-**[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo)**
+**[Live demos](https://teodoravadani.github.io/qodesign-free/)** · **[qodesign.dev](https://qodesign.dev/components?utm_source=github&utm_medium=readme&utm_campaign=free_repo&utm_content=nav)**
 
 The shadcn CLI needs a `components.json` in your project. In a fresh Next.js app, run this once first:
 
@@ -108,7 +108,7 @@ npm run dev
 
 ## More pieces
 
-More animated pieces live at [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
+More animated pieces live at [qodesign.dev](https://qodesign.dev/components?utm_source=github&utm_medium=readme&utm_campaign=free_repo&utm_content=more).
 
 ## Contributing
 
@@ -118,4 +118,4 @@ PRs welcome: bug fixes, new examples, a11y improvements. Open an issue first for
 
 [MIT](LICENSE). Use anything here in personal and commercial projects. Credit is welcome, not required.
 
-Made by [Teodor](https://github.com/teodoravadani) at [qodesign.dev](https://qodesign.dev/?utm_source=github&utm_medium=readme&utm_campaign=free_repo).
+Made by [Teodor](https://github.com/teodoravadani) at [qodesign.dev](https://qodesign.dev/free?utm_source=github&utm_medium=readme&utm_campaign=free_repo&utm_content=footer).
