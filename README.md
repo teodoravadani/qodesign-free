@@ -32,6 +32,14 @@ This route needs Tailwind CSS in your project for the Day / Night Toggle, becaus
 
 The registry index is at [`r/registry.json`](https://teodoravadani.github.io/qodesign-free/r/registry.json) and every item lives at `https://teodoravadani.github.io/qodesign-free/r/<name>.json`.
 
+## Or let your AI agent do it
+
+```bash
+npx skills add teodoravadani/qodesign-free
+```
+
+This adds the repo's Agent Skill ([`skills/qodesign-free/SKILL.md`](skills/qodesign-free/SKILL.md)) to your project. Cursor, Claude Code and other coding agents then know how to install each piece and follow the qodesign motion rules when they add animation.
+
 ## Or install from npm
 
 ```bash
