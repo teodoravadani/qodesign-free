@@ -225,7 +225,7 @@ h1 em{font-style:normal;color:var(--volt)}
 const $ = id => document.getElementById(id);
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const P = new URLSearchParams(location.search);
-const AUTOPLAY = P.get('autoplay') !== '0';
+const AUTOPLAY = P.get('autoplay') !== '0' && P.get('demo') !== '0';
 const IDLE_MS = 4000, GAP = 10, PEEK = 16, VISIBLE = 3, LIFE = 5000;
 
 const ICONS = {

@@ -172,7 +172,7 @@ h1 em{font-style:normal;color:var(--volt)}
 const $ = id => document.getElementById(id);
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const P = new URLSearchParams(location.search);
-const AUTOPLAY = P.get('autoplay') !== '0';
+const AUTOPLAY = P.get('autoplay') !== '0' && P.get('demo') !== '0';
 const IDLE_MS = 4000;
 const PLANS = [
   {id:'starter', name:'Starter', note:'1 seat', desc:'For side projects and trying things out.', m:12, y:10, cta:'Start free',

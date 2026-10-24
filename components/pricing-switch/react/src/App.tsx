@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PricingSwitch, PricingSwitchHandle, Plan } from './components/PricingSwitch';
 import './demo.css';
+/* ?demo=0 or ?autoplay=0 turns the scripted demo off */
+const AUTOPLAY = (() => { const p = new URLSearchParams(location.search); return p.get('demo') !== '0' && p.get('autoplay') !== '0'; })();
 
 const PLANS: Plan[] = [
   { id: 'starter', name: 'Starter', note: '1 seat', description: 'For side projects and trying things out.', monthly: 12, yearly: 10, cta: 'Start free',
@@ -18,7 +20,7 @@ const IDLE_MS = 4000;
 export default function App() {
   const [yearly, setYearly] = useState(false);
   const [hl, setHl] = useState<string | null>(null);
-  const [mode, setMode] = useState<'demo' | 'live'>('demo');
+  const [mode, setMode] = useState<'demo' | 'live'>(AUTOPLAY ? 'demo' : 'live');
   const [cur, setCur] = useState({ x: 640, y: 700, ms: 0, on: false, down: false });
   const [rings, setRings] = useState<{ id: number; x: number; y: number }[]>([]);
   const modeRef = useRef(mode); modeRef.current = mode;
@@ -62,7 +64,7 @@ export default function App() {
     } catch { /* stopped by real input */ }
   }, []);
 
-  useEffect(() => { const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
+  useEffect(() => { if (!AUTOPLAY) return; const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
 
   /* real input takes over; 4 s after the last input the demo comes back */
   useEffect(() => {
@@ -87,7 +89,7 @@ export default function App() {
     evs.forEach((ev) => addEventListener(ev, touch, o));
     addEventListener('pointerdown', down, o); ['pointerup', 'pointercancel'].forEach((ev) => addEventListener(ev, up, o));
     const iv = setInterval(() => {
-      if (modeRef.current === 'live' && !pressed && performance.now() - last > IDLE_MS) {
+      if (AUTOPLAY && modeRef.current === 'live' && !pressed && performance.now() - last > IDLE_MS) {
         (document.activeElement as HTMLElement | null)?.blur?.();
         modeRef.current = 'demo'; setMode('demo'); setHl(null); setYearly(false);
         if (narrow()) ps.current?.centre('pro', false);

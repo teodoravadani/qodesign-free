@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Toaster, toast, toastDrag, getToasts } from './components/ToastStack';
 import './demo.css';
+/* ?demo=0 or ?autoplay=0 turns the scripted demo off */
+const AUTOPLAY = (() => { const p = new URLSearchParams(location.search); return p.get('demo') !== '0' && p.get('autoplay') !== '0'; })();
 
 /* ---------------- the little app around the toaster (demo only) ---------------- */
 type Dep = { sha: string; msg: string; st: 'Ready' | 'Building'; t: string; key: string; flash?: boolean; gone?: boolean };
@@ -40,7 +42,7 @@ const NAV = [
 export default function App() {
   const [deps, setDeps] = useState<Dep[]>(DEPLOYS0);
   const [invs, setInvs] = useState<Inv[]>(INVOICES0);
-  const [mode, setMode] = useState<'demo' | 'live'>('demo');
+  const [mode, setMode] = useState<'demo' | 'live'>(AUTOPLAY ? 'demo' : 'live');
   const [demoOpen, setDemoOpen] = useState(false);
   const [cur, setCur] = useState({ x: 700, y: 620, ms: 0, on: false, down: false });
   const [rings, setRings] = useState<{ id: number; x: number; y: number }[]>([]);
@@ -145,7 +147,7 @@ export default function App() {
     } catch { /* stopped by real input */ }
   }, [doDeploy, doArchive, doKey, resetAll]);
 
-  useEffect(() => { const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
+  useEffect(() => { if (!AUTOPLAY) return; const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
 
   /* real input takes over; 4 s after the last input the demo comes back */
   useEffect(() => {
@@ -169,7 +171,7 @@ export default function App() {
     addEventListener('pointerdown', down, o); ['pointerup', 'pointercancel'].forEach((ev) => addEventListener(ev, up, o));
     const iv = setInterval(() => {
       const loading = getToasts().some((t) => t.type === 'loading' || t.resolving);
-      if (modeRef.current === 'live' && !pressed && !loading && performance.now() - last > IDLE_MS) {
+      if (AUTOPLAY && modeRef.current === 'live' && !pressed && !loading && performance.now() - last > IDLE_MS) {
         (document.activeElement as HTMLElement | null)?.blur?.();
         modeRef.current = 'demo'; setMode('demo'); resetAll(); setTimeout(demo, 300);
       }

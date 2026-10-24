@@ -2,6 +2,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { UploadDropzone, UploadDropzoneHandle, uploadBurst } from './components/UploadDropzone';
 import './demo.css';
+/* ?demo=0 or ?autoplay=0 turns the scripted demo off */
+const AUTOPLAY = (() => { const p = new URLSearchParams(location.search); return p.get('demo') !== '0' && p.get('autoplay') !== '0'; })();
 
 const DEMO_FILES = [
   { name: 'brand-guidelines.pdf', size: 4.2 * 1048576, simulate: { speed: 0.62 } },
@@ -17,7 +19,7 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [pop, setPop] = useState(0);
   const [published, setPublished] = useState(false);
-  const [mode, setMode] = useState<'demo' | 'live'>('demo');
+  const [mode, setMode] = useState<'demo' | 'live'>(AUTOPLAY ? 'demo' : 'live');
   const [cur, setCur] = useState({ x: 1200, y: 760, ms: 0, ease: '', on: false, down: false, drag: false });
   const [rings, setRings] = useState<{ id: number; x: number; y: number }[]>([]);
   const modeRef = useRef(mode); modeRef.current = mode;
@@ -77,7 +79,7 @@ export default function App() {
     } catch { /* stopped by real input */ }
   }, [publish]);
 
-  useEffect(() => { const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
+  useEffect(() => { if (!AUTOPLAY) return; const k = setTimeout(demo, 50); return () => { clearTimeout(k); run.current++; }; }, [demo]);
 
   const takeOverRef = useRef<() => void>(() => {});
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function App() {
     addEventListener('focus', focus);
     const iv = setInterval(() => {
       const uploading = dz.current?.items().some((f) => f.status === 'uploading');
-      if (modeRef.current === 'live' && !pressed && !uploading && !busy.current && performance.now() - last > IDLE_MS) {
+      if (AUTOPLAY && modeRef.current === 'live' && !pressed && !uploading && !busy.current && performance.now() - last > IDLE_MS) {
         (document.activeElement as HTMLElement | null)?.blur?.();
         modeRef.current = 'demo'; setMode('demo'); dz.current?.clear(false); setReady(false); setPublished(false);
         setTimeout(demo, 400);

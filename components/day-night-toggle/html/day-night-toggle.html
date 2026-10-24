@@ -100,7 +100,7 @@ toggle.addEventListener('click', () => {
 // </reel>
   t.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); t.click(); } });
   // hands-free demo: flips every 2.6 s while idle. Real input stops it; 4 s of quiet starts it again. ?demo=0 turns it off.
-  if (new URLSearchParams(location.search).get('demo') !== '0') {
+  if (new URLSearchParams(location.search).get('demo') !== '0' && new URLSearchParams(location.search).get('autoplay') !== '0') {
     let last = -1e9;
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, e => { if (e.isTrusted) last = performance.now(); }, { passive: true }));
     setTimeout(() => t.click(), 1200);

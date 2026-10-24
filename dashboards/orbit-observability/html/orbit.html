@@ -433,7 +433,7 @@ const NS = 'http://www.w3.org/2000/svg';
 const params = new URLSearchParams(location.search);
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
 let reduce = mq.matches; mq.addEventListener && mq.addEventListener('change', e => { reduce = e.matches; });
-const DEMO = params.get('demo') !== '0';
+const DEMO = params.get('demo') !== '0' && params.get('autoplay') !== '0';
 const C = { lime: '#C6FF3D', violet: '#8B6CFF', cyan: '#5EE1FF', amber: '#FFB547', red: '#FF5C7A', line: '#262A36', text: '#F4F4F6', muted: '#8A8FA3' };
 
 // seeded random: the first frame always looks the same

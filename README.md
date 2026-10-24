@@ -110,7 +110,7 @@ npm run dev
 
 ## Notes
 
-- Every demo plays by itself until you touch it. Add `?demo=0` to turn that off.
+- Every demo plays by itself until you touch it. Add `?demo=0` to turn that off (`?autoplay=0` works too).
 - Everything respects Reduce Motion and has visible focus states and 44 px touch targets on phones.
 - The page keeps scrolling when your cursor or finger is over a component.
 - Data in the dashboards is simulated. Each README says which file to swap for your API.

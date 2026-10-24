@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import DayNightToggle from './components/DayNightToggle';
 
 // ?demo=0 turns the hands-free demo off
-const demo = new URLSearchParams(location.search).get('demo') !== '0';
+/* ?demo=0 or ?autoplay=0 turns the scripted demo off */
+const demo = (() => { const p = new URLSearchParams(location.search); return p.get('demo') !== '0' && p.get('autoplay') !== '0'; })();
 
 export default function App() {
   const [night, setNight] = useState(false);
