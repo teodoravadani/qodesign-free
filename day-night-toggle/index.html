@@ -62,7 +62,33 @@
 }
 .toggle.night .cloud { transform: translateY(240px); }
 /* </reel> */
-</style></head>
+</style><script>
+/* Show HN attribution: a visit that came from Hacker News keeps utm_source=hn on qodesign.dev links. */
+(function(){
+  try {
+    var hn = /^https?:\/\/([a-z0-9-]+\.)*news\.ycombinator\.com(\/|$)/i.test(document.referrer || '');
+    try { if (hn) sessionStorage.setItem('qd_from_hn', '1'); else hn = sessionStorage.getItem('qd_from_hn') === '1'; } catch (e) {}
+    if (!hn) return;
+    var tag = function (a) {
+      try {
+        var u = new URL(a.href, location.href);
+        if (!/(^|\.)qodesign\.dev$/i.test(u.hostname)) return;
+        if (u.searchParams.get('utm_source') === 'hn' && u.searchParams.get('utm_medium') === 'showhn') return;
+        u.searchParams.set('utm_source', 'hn');
+        u.searchParams.set('utm_medium', 'showhn');
+        a.href = u.toString();
+      } catch (e) {}
+    };
+    var all = function () { var l = document.querySelectorAll('a[href*="qodesign.dev"]'); for (var i = 0; i < l.length; i++) tag(l[i]); };
+    var onEvt = function (e) { var a = e.target && e.target.closest && e.target.closest('a[href]'); if (a) tag(a); };
+    ['pointerdown', 'click', 'auxclick', 'contextmenu', 'keydown', 'focusin'].forEach(function (t) { document.addEventListener(t, onEvt, true); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all); else all();
+    window.addEventListener('load', all);
+    if (window.MutationObserver) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(all, 50); }).observe(document.documentElement, { childList: true, subtree: true }); }
+  } catch (e) {}
+})();
+</script>
+</head>
 <body>
 <div class="wrap">
   <div class="toggle" id="toggle" role="switch" aria-checked="false" aria-label="Dark mode" tabindex="0">
@@ -100,7 +126,7 @@ toggle.addEventListener('click', () => {
 // </reel>
   t.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); t.click(); } });
   // hands-free demo: flips every 2.6 s while idle. Real input stops it; 4 s of quiet starts it again. ?demo=0 turns it off.
-  if (new URLSearchParams(location.search).get('demo') !== '0') {
+  if (new URLSearchParams(location.search).get('demo') !== '0' && new URLSearchParams(location.search).get('autoplay') !== '0') {
     let last = -1e9;
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, e => { if (e.isTrusted) last = performance.now(); }, { passive: true }));
     setTimeout(() => t.click(), 1200);

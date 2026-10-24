@@ -161,6 +161,32 @@ h1 em{font-style:normal;color:var(--volt)}
   .cursor,.carry{transition:none}
 }
 </style>
+<script>
+/* Show HN attribution: a visit that came from Hacker News keeps utm_source=hn on qodesign.dev links. */
+(function(){
+  try {
+    var hn = /^https?:\/\/([a-z0-9-]+\.)*news\.ycombinator\.com(\/|$)/i.test(document.referrer || '');
+    try { if (hn) sessionStorage.setItem('qd_from_hn', '1'); else hn = sessionStorage.getItem('qd_from_hn') === '1'; } catch (e) {}
+    if (!hn) return;
+    var tag = function (a) {
+      try {
+        var u = new URL(a.href, location.href);
+        if (!/(^|\.)qodesign\.dev$/i.test(u.hostname)) return;
+        if (u.searchParams.get('utm_source') === 'hn' && u.searchParams.get('utm_medium') === 'showhn') return;
+        u.searchParams.set('utm_source', 'hn');
+        u.searchParams.set('utm_medium', 'showhn');
+        a.href = u.toString();
+      } catch (e) {}
+    };
+    var all = function () { var l = document.querySelectorAll('a[href*="qodesign.dev"]'); for (var i = 0; i < l.length; i++) tag(l[i]); };
+    var onEvt = function (e) { var a = e.target && e.target.closest && e.target.closest('a[href]'); if (a) tag(a); };
+    ['pointerdown', 'click', 'auxclick', 'contextmenu', 'keydown', 'focusin'].forEach(function (t) { document.addEventListener(t, onEvt, true); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all); else all();
+    window.addEventListener('load', all);
+    if (window.MutationObserver) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(all, 50); }).observe(document.documentElement, { childList: true, subtree: true }); }
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 <div class="glow" aria-hidden="true"></div>
@@ -211,7 +237,7 @@ h1 em{font-style:normal;color:var(--volt)}
 const $ = id => document.getElementById(id);
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const P = new URLSearchParams(location.search);
-const AUTOPLAY = P.get('autoplay') !== '0';
+const AUTOPLAY = P.get('autoplay') !== '0' && P.get('demo') !== '0';
 const IDLE_MS = 4000, MAX = 50 * 1024 * 1024;
 const TYPES = {pdf:'#FF6B7A', png:'#B9A6FF', jpg:'#B9A6FF', jpeg:'#B9A6FF', gif:'#B9A6FF', webp:'#B9A6FF', svg:'#FF8FD1', zip:'#FFC85E', md:'#5EE1FF', txt:'#5EE1FF', mp4:'#5EE1FF', mov:'#5EE1FF', fig:'#FF8FD1'};
 const DOC = '<svg aria-hidden="true" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 9h10l6 6v18a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2Z"/></svg>';

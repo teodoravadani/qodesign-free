@@ -7,9 +7,35 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22%3E%3Ccircle cx=%2214%22 cy=%2214%22 r=%2210%22 fill=%22%23FFD23F%22/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="./assets/index-DX3HwuBW.js"></script>
+    <script type="module" crossorigin src="./assets/index-BLHTi3tF.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BlvX1b0s.css">
-  </head>
+  <script>
+/* Show HN attribution: a visit that came from Hacker News keeps utm_source=hn on qodesign.dev links. */
+(function(){
+  try {
+    var hn = /^https?:\/\/([a-z0-9-]+\.)*news\.ycombinator\.com(\/|$)/i.test(document.referrer || '');
+    try { if (hn) sessionStorage.setItem('qd_from_hn', '1'); else hn = sessionStorage.getItem('qd_from_hn') === '1'; } catch (e) {}
+    if (!hn) return;
+    var tag = function (a) {
+      try {
+        var u = new URL(a.href, location.href);
+        if (!/(^|\.)qodesign\.dev$/i.test(u.hostname)) return;
+        if (u.searchParams.get('utm_source') === 'hn' && u.searchParams.get('utm_medium') === 'showhn') return;
+        u.searchParams.set('utm_source', 'hn');
+        u.searchParams.set('utm_medium', 'showhn');
+        a.href = u.toString();
+      } catch (e) {}
+    };
+    var all = function () { var l = document.querySelectorAll('a[href*="qodesign.dev"]'); for (var i = 0; i < l.length; i++) tag(l[i]); };
+    var onEvt = function (e) { var a = e.target && e.target.closest && e.target.closest('a[href]'); if (a) tag(a); };
+    ['pointerdown', 'click', 'auxclick', 'contextmenu', 'keydown', 'focusin'].forEach(function (t) { document.addEventListener(t, onEvt, true); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all); else all();
+    window.addEventListener('load', all);
+    if (window.MutationObserver) { var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(all, 50); }).observe(document.documentElement, { childList: true, subtree: true }); }
+  } catch (e) {}
+})();
+</script>
+</head>
   <body>
     <div id="root"></div>
   </body>
