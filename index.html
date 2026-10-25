@@ -225,11 +225,13 @@
     imgs.forEach(function (img) { if (img._v && img._v.parentNode) { img._v.pause(); img._v.remove(); img.style.display = ''; } });
   };
   if (!('IntersectionObserver' in window)) { if (!reduce()) imgs.forEach(function (i) { show(i, true); }); return; }
-  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { show(e.target, e.isIntersecting); }); }, { rootMargin: '200px 0px' });
-  imgs.forEach(function (i) { io.observe(i); });
+  /* Observe the card's frame, not the img: the img is hidden once its video is swapped in, and a hidden img reads as off screen, which paused every video on its first frame. */
+  imgs.forEach(function (i) { i.parentNode._qdImg = i; });
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { show(e.target._qdImg, e.isIntersecting); }); }, { rootMargin: '200px 0px' });
+  imgs.forEach(function (i) { io.observe(i.parentNode); });
   var onChange = function () {
     if (reduce()) swapBack();
-    else imgs.forEach(function (i) { io.unobserve(i); io.observe(i); });
+    else imgs.forEach(function (i) { io.unobserve(i.parentNode); io.observe(i.parentNode); });
   };
   if (mq) { if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange); }
 })();
