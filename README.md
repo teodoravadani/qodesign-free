@@ -8,7 +8,7 @@
 
 Animated React + Tailwind components for AI-first builders who ship with Cursor, Lovable, v0 or Claude Code. Every folder has a `PROMPT.md`, so your agent can install a piece, wire it to your data and restyle it.
 
-Four components and two full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
+Animated components and full dashboards, written in TypeScript with Tailwind CSS and Framer Motion. They install with the shadcn CLI and work in Next.js, Vite and Lovable apps. MIT licensed.
 
 Tested in a clean Next.js 15 app (React 19, Tailwind v4, App Router, `next build`) and in the Vite + React 18 + Tailwind v3 demo project inside each folder. Peer dependencies are React 18 or 19 and framer-motion 11 or newer.
 
