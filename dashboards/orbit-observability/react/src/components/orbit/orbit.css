@@ -55,11 +55,11 @@
 .orbit .live{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border-radius:12px;border:1px solid color-mix(in srgb,var(--lime) 30%,var(--line));background:color-mix(in srgb,var(--lime) 7%,var(--panel));font-weight:600;font-size:13px;color:var(--lime);transition:transform .15s}
 .orbit .live:active{transform:scale(.96)}
 .orbit .live i{width:8px;height:8px;border-radius:50%;background:var(--lime);position:relative}
-.orbit .live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--lime);animation:ping 1.6s var(--ease-out) infinite}
+.orbit .live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--lime);animation:orbit-ping 1.6s var(--ease-out) infinite}
 .orbit .live[aria-pressed="false"]{color:var(--muted);border-color:var(--line);background:var(--panel)}
 .orbit .live[aria-pressed="false"] i{background:var(--faint)}
 .orbit .live[aria-pressed="false"] i::after{display:none}
-@keyframes ping{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.9);opacity:0}}
+@keyframes orbit-ping{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.9);opacity:0}}
 .orbit .seg{position:relative;display:flex;height:44px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .orbit .seg button{position:relative;z-index:1;min-width:48px;padding:0 12px;border:0;background:none;color:var(--muted);font-weight:600;font-size:13px;border-radius:8px;transition:color .25s}
 .orbit .seg button[aria-checked="true"]{color:var(--ink)}
@@ -67,8 +67,8 @@
 .orbit .seg-pill{position:absolute;top:4px;bottom:4px;left:0;border-radius:8px;background:var(--lime);transition:transform .45s var(--ease-spring),width .45s var(--ease-spring)}
 .orbit .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
 .orbit .card{position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--panel-2) 70%,transparent),var(--panel));border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0;
-  opacity:0;transform:translateY(14px);animation:rise .7s var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 70ms)}
-@keyframes rise{to{opacity:1;transform:none}}
+  opacity:0;transform:translateY(14px);animation:orbit-rise .7s var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes orbit-rise{to{opacity:1;transform:none}}
 .orbit .card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:28px;flex-wrap:wrap}
 .orbit .card-h h2{margin:0;font-size:14px;font-weight:600;letter-spacing:-.1px}
 .orbit .card-h .sub{color:var(--muted);font-size:12px}
@@ -117,8 +117,8 @@
 .orbit .node:hover .core,.orbit .node:focus-visible .core{stroke:var(--text)}
 /* hig-disable-next-line css/outline-none -- the focus ring is drawn on the wrapper with :focus-within (inputs) or on the node core with :focus-visible (map nodes) */
 .orbit .node:focus{outline:none}
-.orbit .node.degraded .halo{animation:halo 1.4s var(--ease-out) infinite}
-@keyframes halo{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.orbit .node.degraded .halo{animation:orbit-halo 1.4s var(--ease-out) infinite}
+@keyframes orbit-halo{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.6);opacity:0}}
 .orbit .pkt{pointer-events:none}
 .orbit .map-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:11px;color:var(--muted)}
 .orbit .map-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
@@ -136,11 +136,11 @@
 .orbit .up-row .nm{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .orbit .up-row .pc{text-align: end;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .orbit .bars{display:flex;gap:1px;height:26px;align-items:stretch}
-.orbit .bars i{flex:1;min-width:1px;border-radius:2px;background:var(--lime);opacity:.8;transform-origin:bottom;transform:scaleY(0);animation:grow .5s var(--ease-spring) forwards;transition:opacity .15s}
+.orbit .bars i{flex:1;min-width:1px;border-radius:2px;background:var(--lime);opacity:.8;transform-origin:bottom;transform:scaleY(0);animation:orbit-grow .5s var(--ease-spring) forwards;transition:opacity .15s}
 .orbit .bars i.w{background:var(--amber)}
 .orbit .bars i.e{background:var(--red)}
 .orbit .bars i:hover{opacity:1;outline:1px solid var(--text);outline-offset:1px}
-@keyframes grow{to{transform:scaleY(1)}}
+@keyframes orbit-grow{to{transform:scaleY(1)}}
 .orbit .up-axis{display:flex;justify-content:space-between;margin:6px 0 0 106px;padding-right:72px;color:var(--faint);font-size:11px;font-family:var(--font-mono)}
 .orbit .reg{display:flex;flex-direction:column;gap:10px}
 .orbit .reg-row{display:grid;grid-template-columns:18px minmax(0,1fr) auto;align-items:center;gap:10px}
@@ -162,7 +162,7 @@
 .orbit .deps{position:relative;display:flex;flex-direction:column;gap:2px}
 .orbit .deps::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line-soft)}
 .orbit .dep{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 0}
-.orbit .dep.fresh{animation:rowin .5s var(--ease-out)}
+.orbit .dep.fresh{animation:orbit-rowin .5s var(--ease-out)}
 .orbit .dep .pin{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:2px solid var(--line);z-index:1}
 .orbit .dep .pin i{width:8px;height:8px;border-radius:50%}
 .orbit .dep.ok .pin{border-color:color-mix(in srgb,var(--lime) 55%,var(--line))}
@@ -170,15 +170,15 @@
 .orbit .dep.fail .pin{border-color:color-mix(in srgb,var(--red) 55%,var(--line))}
 .orbit .dep.fail .pin i{background:var(--red)}
 .orbit .dep.run .pin{border-color:var(--violet)}
-.orbit .dep.run .pin i{background:var(--violet);animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.25}}
+.orbit .dep.run .pin i{background:var(--violet);animation:orbit-blink 1s infinite}
+@keyframes orbit-blink{50%{opacity:.25}}
 .orbit .dep .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .orbit .dep .t code{font-family:var(--font-mono);font-size:12px;color:var(--violet);font-weight:500;margin-right:6px}
 .orbit .dep .m{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .orbit .dep .prog{height:4px;border-radius:4px;background:var(--line-soft);overflow:hidden;margin-top:6px;position:relative}
 .orbit .dep .prog i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:linear-gradient(90deg,var(--violet),var(--lime));transition:width .6s var(--ease-out);overflow:hidden}
-.orbit .dep .prog i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:shim 1.2s linear infinite}
-@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.orbit .dep .prog i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:orbit-shim 1.2s linear infinite}
+@keyframes orbit-shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 .orbit .budget{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-soft)}
 .orbit .budget-h,.orbit .budget-f{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted)}
 .orbit .budget-h b{font-size:18px;color:var(--text);font-weight:600}
@@ -213,10 +213,10 @@
 .orbit tbody td{padding:9px 12px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
 .orbit tbody tr{transition:background .2s}
 .orbit tbody tr:hover{background:color-mix(in srgb,var(--text) 4%,transparent)}
-.orbit tbody tr.new{animation:flash 1.6s var(--ease-out)}
-.orbit tbody tr.enter{animation:rowin .45s var(--ease-out) backwards;animation-delay:calc(var(--r,0) * 30ms)}
-@keyframes flash{0%{background:color-mix(in srgb,var(--lime) 20%,transparent)}100%{background:transparent}}
-@keyframes rowin{from{opacity:0;transform:translateY(6px)}}
+.orbit tbody tr.new{animation:orbit-flash 1.6s var(--ease-out)}
+.orbit tbody tr.enter{animation:orbit-rowin .45s var(--ease-out) backwards;animation-delay:calc(var(--r,0) * 30ms)}
+@keyframes orbit-flash{0%{background:color-mix(in srgb,var(--lime) 20%,transparent)}100%{background:transparent}}
+@keyframes orbit-rowin{from{opacity:0;transform:translateY(6px)}}
 .orbit td.mono{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .orbit td.msg{max-width:340px;overflow:hidden;text-overflow:ellipsis}
 .orbit .lv{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}

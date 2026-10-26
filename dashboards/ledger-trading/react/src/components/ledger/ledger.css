@@ -31,16 +31,16 @@
 .ledger .dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 20%,transparent)}
 .ledger .avatar{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),var(--cyan));color:var(--ink);font-weight:700;font-size:13px}
 .ledger .ticker{overflow:hidden;border-bottom:1px solid var(--line-soft);background:var(--ink-2);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.ledger .ticker-track{display:flex;width:max-content;animation:marquee 48s linear infinite}
+.ledger .ticker-track{display:flex;width:max-content;animation:ledger-marquee 48s linear infinite}
 .ledger .ticker:hover .ticker-track{animation-play-state:paused}
 .ledger .tk{display:flex;align-items:center;gap:8px;height:36px;padding:0 18px;font-size:12px;white-space:nowrap;border-right:1px solid var(--line-soft)}
 .ledger .tk b{font-weight:600}
 .ledger .tk .num{color:var(--text)}
-@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes ledger-marquee{to{transform:translateX(-50%)}}
 .ledger .wrap{padding:16px 20px 40px;display:grid;grid-template-columns:minmax(0,1fr) 320px 300px;gap:16px}
 .ledger .card{position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--panel-2) 70%,transparent),var(--panel));border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0;
-  opacity:0;transform:translateY(14px);animation:rise .7s var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 70ms)}
-@keyframes rise{to{opacity:1;transform:none}}
+  opacity:0;transform:translateY(14px);animation:ledger-rise .7s var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes ledger-rise{to{opacity:1;transform:none}}
 .ledger .card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:28px;flex-wrap:wrap}
 .ledger .card-h h2{margin:0;font-size:14px;font-weight:600}
 .ledger .card-h .sub{color:var(--muted);font-size:12px}
@@ -57,10 +57,10 @@
 .ledger .pair b{font-size:18px}
 .ledger .pair small{display:block;color:var(--muted);font-size:12px}
 .ledger .price{font-family:var(--font-mono);font-size:30px;font-weight:600;letter-spacing:-1px;font-variant-numeric:tabular-nums;padding:0 6px;border-radius:8px;transition:color .3s}
-.ledger .price.fu{animation:fu .7s var(--ease-out)}
-.ledger .price.fd{animation:fd .7s var(--ease-out)}
-@keyframes fu{0%{background:color-mix(in srgb,var(--up) 22%,transparent)}100%{background:transparent}}
-@keyframes fd{0%{background:color-mix(in srgb,var(--down) 22%,transparent)}100%{background:transparent}}
+.ledger .price.fu{animation:ledger-fu .7s var(--ease-out)}
+.ledger .price.fd{animation:ledger-fd .7s var(--ease-out)}
+@keyframes ledger-fu{0%{background:color-mix(in srgb,var(--up) 22%,transparent)}100%{background:transparent}}
+@keyframes ledger-fd{0%{background:color-mix(in srgb,var(--down) 22%,transparent)}100%{background:transparent}}
 .ledger .stat small{display:block;color:var(--muted);font-size:12px}
 .ledger .stat b{font-family:var(--font-mono);font-size:13px;font-weight:500}
 .ledger .seg{position:relative;display:flex;height:36px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2);margin-left:auto}
@@ -88,8 +88,8 @@
 .ledger .bids .book-row i{background:color-mix(in srgb,var(--up) 11%,transparent)}
 .ledger .asks .book-row span:first-child{color:var(--down)}
 .ledger .bids .book-row span:first-child{color:var(--up)}
-.ledger .book-row.flash{animation:bflash .6s var(--ease-out)}
-@keyframes bflash{0%{background:color-mix(in srgb,var(--text) 14%,transparent)}100%{background:transparent}}
+.ledger .book-row.flash{animation:ledger-bflash .6s var(--ease-out)}
+@keyframes ledger-bflash{0%{background:color-mix(in srgb,var(--text) 14%,transparent)}100%{background:transparent}}
 .ledger .spread{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;margin:2px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
 .ledger .spread b{font-family:var(--font-mono);font-size:18px;font-weight:600}
 .ledger .spread small{color:var(--muted);font-size:12px}
@@ -130,10 +130,10 @@
 .ledger .go:active{transform:scale(.98)}
 .ledger .go:disabled{opacity:.45;cursor:not-allowed}
 .ledger .sell-mode .go{background:var(--down);color:var(--text)}
-.ledger .go .sp{display:none;width:18px;height:18px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+.ledger .go .sp{display:none;width:18px;height:18px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:ledger-spin .7s linear infinite;vertical-align:middle;margin-right:8px}
 .ledger .go.busy .sp{display:inline-block}
 .ledger .go.done{background:var(--text)}
-@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ledger-spin{to{transform:rotate(360deg)}}
 .ledger .avail{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:10px}
 .ledger .avail b{color:var(--text);font-family:var(--font-mono);font-weight:500}
 .ledger .ferr{color:var(--down);font-size:12px;min-height:16px;margin:-2px 0 6px}
@@ -195,10 +195,10 @@
 .ledger tbody td.m{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .ledger tbody tr{transition:background .2s}
 .ledger tbody tr:hover{background:color-mix(in srgb,var(--text) 4%,transparent)}
-.ledger tbody tr.enter{animation:rowin .45s var(--ease-out) backwards;animation-delay:calc(var(--r,0) * 30ms)}
-.ledger tbody tr.new{animation:flash 1.6s var(--ease-out)}
-@keyframes rowin{from{opacity:0;transform:translateY(6px)}}
-@keyframes flash{0%{background:color-mix(in srgb,var(--up) 18%,transparent)}100%{background:transparent}}
+.ledger tbody tr.enter{animation:ledger-rowin .45s var(--ease-out) backwards;animation-delay:calc(var(--r,0) * 30ms)}
+.ledger tbody tr.new{animation:ledger-flash 1.6s var(--ease-out)}
+@keyframes ledger-rowin{from{opacity:0;transform:translateY(6px)}}
+@keyframes ledger-flash{0%{background:color-mix(in srgb,var(--up) 18%,transparent)}100%{background:transparent}}
 .ledger .side-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px}
 .ledger .side-tag.buy{color:var(--up);background:color-mix(in srgb,var(--up) 12%,transparent)}
 .ledger .side-tag.sell{color:var(--down);background:color-mix(in srgb,var(--down) 12%,transparent)}

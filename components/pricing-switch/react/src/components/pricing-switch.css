@@ -33,9 +33,9 @@
 .qd-card .qd-ring{position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);overflow:hidden;z-index:2}
 .qd-card .qd-ring i{position:absolute;left:50%;top:50%;width:160%;aspect-ratio:1;translate:-50% -50%;background:conic-gradient(from 0deg,var(--volt),#6EE7B7 18%,var(--ultra) 40%,rgba(139,108,255,.15) 55%,rgba(198,255,61,.15) 75%,var(--volt));animation:qd-spin 4s linear infinite}
 .qd-card.feat.boost .qd-ring i{animation-duration:.9s}
-.qd-card .qd-halo{position:absolute;inset:-30px -20px;z-index:-1;border-radius:40px;background:radial-gradient(60% 50% at 50% 0%,rgba(139,108,255,.35),transparent 70%),radial-gradient(60% 45% at 50% 100%,rgba(198,255,61,.18),transparent 70%);filter:blur(24px);opacity:.8;pointer-events:none;animation:qd-breathe 3.2s ease-in-out infinite}
+.qd-card .qd-halo{position:absolute;inset:-30px -20px;z-index:-1;border-radius:40px;background:radial-gradient(60% 50% at 50% 0%,rgba(139,108,255,.35),transparent 70%),radial-gradient(60% 45% at 50% 100%,rgba(198,255,61,.18),transparent 70%);filter:blur(24px);opacity:.8;pointer-events:none;animation:qd-ps-breathe 3.2s ease-in-out infinite}
 @keyframes qd-spin{to{transform:rotate(360deg)}}
-@keyframes qd-breathe{50%{opacity:.45}}
+@keyframes qd-ps-breathe{50%{opacity:.45}}
 .qd-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;overflow:hidden}
 .qd-shine::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.10) 48%,rgba(198,255,61,.10) 52%,transparent 65%);transform:translateX(-120%)}
 .qd-card.sweep .qd-shine::after{animation:qd-sweep .9s var(--out) forwards;animation-delay:var(--d,0s)}
