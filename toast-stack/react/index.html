@@ -39,5 +39,27 @@
 </head>
   <body>
     <div id="root"></div>
-  </body>
+  
+<!-- qd-twin: paid twin card (Q-651) -->
+<style>.qd-twin{position:fixed;right:16px;bottom:16px;z-index:2147483000;box-sizing:border-box;width:300px;max-width:calc(100vw - 24px);margin:0;padding:0;font:14px/1.4 'Space Grotesk',system-ui,-apple-system,sans-serif;color:#F4F4F6;-webkit-font-smoothing:antialiased;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s cubic-bezier(.16,1,.3,1)}
+.qd-twin.qd-on{opacity:1;transform:none}
+.qd-twin *{box-sizing:border-box}
+.qd-twin a.qd-twin-a{display:grid;gap:3px;padding:12px 40px 12px 14px;border-radius:14px;background:rgba(17,18,24,.94);border:1px solid #2E3342;box-shadow:0 10px 30px rgba(0,0,0,.35);color:#F4F4F6;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.qd-twin a.qd-twin-a:hover{border-color:#C6FF3D}
+.qd-twin a.qd-twin-a:focus-visible{outline:2px solid #C6FF3D;outline-offset:2px}
+.qd-twin .qd-k{font:500 10px/1.2 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:#C6FF3D}
+.qd-twin .qd-n{font-weight:600;font-size:15px}
+.qd-twin .qd-d{color:#A3A8B8;font-size:13px}
+.qd-twin .qd-go{font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.qd-twin button.qd-x{position:absolute;top:6px;right:6px;width:30px;height:30px;margin:0;padding:0;border:0;border-radius:8px;background:transparent;color:#8A8FA3;font:18px/30px system-ui,sans-serif;cursor:pointer}
+.qd-twin button.qd-x:hover{color:#F4F4F6;background:rgba(255,255,255,.06)}
+@media (max-width:560px){.qd-twin{left:12px;right:12px;bottom:12px;width:auto}.qd-twin .qd-d{display:none}.qd-twin a.qd-twin-a{grid-template-columns:1fr auto;align-items:center;column-gap:10px;padding:10px 40px 10px 12px}.qd-twin .qd-k{grid-column:1/-1}.qd-twin .qd-go{white-space:nowrap}.qd-twin .qd-long{display:none}}
+@media (prefers-reduced-motion:reduce){.qd-twin{transition:none;transform:none}}
+@media print{.qd-twin{display:none}}</style>
+<aside class="qd-twin" id="qd-twin" aria-label="Paid twin of this piece" hidden><a class="qd-twin-a" href="https://qodesign.dev/components/hold-to-delete?utm_source=github&amp;utm_medium=demo&amp;utm_campaign=showhn&amp;utm_content=twin_card" target="_blank" rel="noopener"><span class="qd-k">Paid twin</span><span class="qd-n">Hold to Delete</span><span class="qd-d">A delete button you press and hold, then the file crumples into the bin.</span><span class="qd-go">See it<span class="qd-long"> on qodesign.dev</span> ↗</span></a><button type="button" class="qd-x" aria-label="Hide this card">×</button></aside>
+<script>(function(){try{var t=document.getElementById('qd-twin');if(!t)return;var k='qd_twin_closed';try{if(sessionStorage.getItem(k)==='1'){t.parentNode.removeChild(t);return;}}catch(e){}
+t.hidden=false;var show=function(){requestAnimationFrame(function(){t.classList.add('qd-on');});};if(document.readyState==='complete')setTimeout(show,600);else window.addEventListener('load',function(){setTimeout(show,600);});
+t.querySelector('.qd-x').addEventListener('click',function(){try{sessionStorage.setItem(k,'1');}catch(e){}t.parentNode.removeChild(t);});}catch(e){}})();</script>
+<!-- /qd-twin -->
+</body>
 </html>
